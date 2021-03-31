@@ -1,0 +1,29 @@
+.filters-list {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  text-align: left;
+  margin-left: 25px;
+}
+
+.filters-list-item {
+  margin: 0 0 10px 0;
+}
+
+.filter-label,
+.filter-button {
+  background-color: #7c40ff;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 2px 5px;
+  width: 100%;
+  color: #fff;
+  display: block;
+}
+
+.filter-select {
+  font-size: 20px;
+  padding: 5px 5px;
+  width: 100%;
+  background-color: #fff;
+}
