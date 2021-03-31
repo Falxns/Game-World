@@ -6,6 +6,7 @@ import GameList from "../../components/GameList/gameList";
 class Home extends Component {
   state = {};
   render() {
+    document.title = "Game World";
     return (
       <>
         <h1 className="head-line">CATALOG</h1>

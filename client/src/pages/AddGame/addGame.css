@@ -1,0 +1,51 @@
+.add-area {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+}
+
+.cols-wrapper-add {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.image-upload {
+  width: 50%;
+  margin-left: 50px;
+}
+
+.image-upload > input {
+  display: none;
+}
+
+.image-upload > label > img {
+  width: 100%;
+  height: 350px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.col-title {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0 50px;
+}
+
+.add-button {
+  font-size: 30px;
+  width: 200px;
+  height: 100px;
+  background-color: #7c40ff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.add-bottom {
+  width: 100%;
+  text-align: center;
+  padding: 0 50px;
+  margin-bottom: 15px;
+}

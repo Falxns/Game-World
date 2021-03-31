@@ -1,18 +1,19 @@
 import "./header.css";
 import React from "react";
+import { Link } from "react-router-dom";
 import homeIcon from "../../assets/icons/home.svg";
 import plusIcon from "../../assets/icons/plus.svg";
 
 const Header = () => {
   return (
     <header>
-      <a href="/" className="img-anchor">
+      <Link to="/" className="img-anchor">
         <img className="img-header" src={homeIcon} alt="Home" />
-      </a>
+      </Link>
       <h3 className="header-title">Game World</h3>
-      <a href="/pages/addgame.html" className="img-anchor">
+      <Link to="/addgame" className="img-anchor">
         <img className="img-header" src={plusIcon} alt="Add" />
-      </a>
+      </Link>
     </header>
   );
 };
