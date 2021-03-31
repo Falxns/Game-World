@@ -86,12 +86,12 @@ app.get("/games", function (req, res) {
     .catch(() => res.status(503).send());
 });
 
-app.get("/game/:id", function (req, res) {
-  const gameID = req.params.id;
+app.get("/games/:gameId", function (req, res) {
+  const gameId = req.params.gameId;
 
-  Game.findById(gameID)
+  Game.findById(gameId)
     .then((game) =>
-      res.render("game", {
+      res.send({
         title: game.title,
         imageUrl: game.imageUrl,
         platform: game.platform,
@@ -101,7 +101,7 @@ app.get("/game/:id", function (req, res) {
         desc: game.desc,
       })
     )
-    .catch(() => res.send("404"));
+    .catch(() => res.status(404).send());
 });
 
 app.get("/delete/:id", function (req, res) {

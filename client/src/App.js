@@ -5,6 +5,7 @@ import Footer from "./components/Footer/footer";
 import Header from "./components/Header/header";
 import Home from "./pages/Home/home";
 import AddGame from "./pages/AddGame/addGame";
+import Game from "./pages/Game/game";
 
 function App() {
   return (
@@ -15,6 +16,9 @@ function App() {
           <Switch>
             <Route path="/addgame">
               <AddGame />
+            </Route>
+            <Route path={"/games/:gameId"}>
+              <Game />
             </Route>
             <Route path="/">
               <Home />
