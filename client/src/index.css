@@ -16,10 +16,14 @@
 }
 
 #root {
-  background-color: #e8ebff;
   display: flex;
   flex-direction: column;
   height: 100vh;
+}
+
+#root,
+body {
+  background-color: #e8ebff;
 }
 
 a {

@@ -33,11 +33,11 @@ app.use(formData.format());
 app.use(formData.stream());
 app.use(formData.union());
 
-app.post("/game", function (req, res) {
+app.post("/games", function (req, res) {
   const { title, platform, genre, maturity, price, desc, image } = req.body;
 
   let imageName = "";
-  if (image) {
+  if (image instanceof fs.ReadStream) {
     imageName = mongoose.Types.ObjectId().toHexString() + ".jpg";
     const imagePath = "./public/images/games/" + imageName;
 
@@ -61,8 +61,8 @@ app.post("/game", function (req, res) {
 
   game
     .save()
-    .then(() => res.redirect("http://localhost:3000/game/" + game._id))
-    .catch(() => console.log("500"));
+    .then(() => res.send(game))
+    .catch(() => res.status(500).send());
 });
 
 app.get("/filter", function (req, res) {
