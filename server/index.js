@@ -104,12 +104,12 @@ app.get("/games/:gameId", function (req, res) {
     .catch(() => res.status(404).send());
 });
 
-app.get("/delete/:id", function (req, res) {
-  const gameID = req.params.id;
+app.delete("/games/:gameId", function (req, res) {
+  const gameId = req.params.gameId;
 
-  Game.findByIdAndDelete(gameID)
-    .then(() => res.redirect("/"))
-    .catch(() => res.send("404"));
+  Game.findByIdAndDelete(gameId)
+    .then((game) => res.send(game))
+    .catch(() => res.status(404).send());
 });
 
-app.listen(3000, () => console.log("Server is listening.."));
+app.listen(3000, () => console.log("Server is listening on port 3000.."));

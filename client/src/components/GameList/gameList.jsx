@@ -18,6 +18,15 @@ class GameList extends Component {
       .catch((err) => console.log(err));
   }
 
+  removeGame = (deletedId) => {
+    let games = this.state.games.filter((game) => {
+      if (game._id !== deletedId) {
+        return true;
+      } else return false;
+    });
+    this.setState({ games });
+  };
+
   renderGames() {
     if (this.state.loading) return <h5 className="games-text">Loading...</h5>;
 
@@ -25,7 +34,7 @@ class GameList extends Component {
       return <h5 className="games-text">There are no games :c</h5>;
 
     return this.state.games.map((game) => (
-      <GameCard key={game._id} gameData={game} />
+      <GameCard key={game._id} gameData={game} removeGame={this.removeGame} />
     ));
   }
 
