@@ -1,5 +1,5 @@
 import "./game.css";
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import arrowIcon from "../../assets/icons/double-arrow.svg";
 
@@ -18,7 +18,7 @@ const Game = () => {
         });
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [gameId]);
 
   if (loading) {
     return <h1 className="games-text">Loading...</h1>;
@@ -39,7 +39,7 @@ const Game = () => {
     <>
       <div className="game-area">
         <div className="picture-area">
-          <img src={gameData.imageUrl} className="image" />
+          <img className="image" src={gameData.imageUrl} alt="" />
           <h1 className="head-line-game">{gameData.title}</h1>
           {renderPrice()}
         </div>
@@ -58,7 +58,7 @@ const Game = () => {
       <div className="desc-area">
         <p className="p-about">ABOUT</p>
         <p className="p-title">{gameData.title}</p>
-        <img className="desc-arrow" src={arrowIcon} />
+        <img className="desc-arrow" src={arrowIcon} alt="" />
         <p className="p-desc">{gameData.desc}</p>
       </div>
     </>

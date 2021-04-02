@@ -1,7 +1,7 @@
 import "./gameCard.css";
 import React, { Component } from "react";
 import freePrice from "../../assets/icons/free.svg";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class GameCard extends Component {
   state = {};
