@@ -95,7 +95,7 @@
 }
 
 @media (max-width: 1100px) {
-  .head-line {
+  .head-line-game {
     top: 10vh;
   }
 
@@ -108,7 +108,7 @@
   }
 }
 @media (max-width: 800px) {
-  .head-line {
+  .head-line-game {
     font-size: 60px;
   }
 
@@ -134,7 +134,7 @@
 }
 
 @media (max-width: 530px) {
-  .head-line {
+  .head-line-game {
     font-size: 50px;
   }
 
@@ -161,6 +161,7 @@
 
   .info-list {
     flex-direction: column;
+    height: 100%;
   }
   .game-area {
     height: calc(100vh + 64px);
@@ -179,7 +180,7 @@
 }
 
 @media (max-width: 400px) {
-  .head-line {
+  .head-line-game {
     font-size: 40px;
   }
 }

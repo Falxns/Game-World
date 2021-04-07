@@ -12,3 +12,30 @@
   display: flex;
   margin-bottom: 10px;
 }
+
+@media (max-width: 950px) {
+  .cols-wrapper {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+@media (max-width: 575px) {
+  .footer-icon,
+  .img-header {
+    width: 40px;
+    height: 40px;
+  }
+
+  .img-anchor {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 400px) {
+  .head-line {
+    font-size: 50px;
+    height: 70px;
+  }
+}

@@ -58,6 +58,7 @@
   width: 30px;
   height: 30px;
   border: 0;
+  background-color: transparent;
   background-size: contain;
   background-image: url("../../assets/icons/delete.svg");
 }
@@ -68,4 +69,22 @@
 
 .delete-button:hover {
   background-image: url("../../assets/icons/delete-active.svg");
+}
+
+@media (max-width: 1000px) {
+  .game-card {
+    max-width: 29%;
+  }
+}
+
+@media (max-width: 650px) {
+  .game-card {
+    max-width: 46%;
+  }
+}
+
+@media (max-width: 400px) {
+  .game-card {
+    max-width: 96%;
+  }
 }
