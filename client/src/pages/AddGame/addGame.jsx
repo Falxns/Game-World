@@ -107,7 +107,7 @@ class AddGame extends Component {
         <div className="add-area">
           <div className="cols-wrapper-add">
             <div className="image-upload">
-              <label for="image">
+              <label htmlFor="image">
                 <img
                   src={defaultImage}
                   alt=""
@@ -125,7 +125,7 @@ class AddGame extends Component {
             <div className="col-title">
               <ul className="add-ul">
                 <li className="filters-list-item">
-                  <label className="filter-label" for="title">
+                  <label className="filter-label" htmlFor="title">
                     Title
                   </label>
                   <input
@@ -138,7 +138,7 @@ class AddGame extends Component {
                   />
                 </li>
                 <li className="filters-list-item">
-                  <label className="filter-label" for="platform">
+                  <label className="filter-label" htmlFor="platform">
                     Platform
                   </label>
                   <select
@@ -155,7 +155,7 @@ class AddGame extends Component {
                   </select>
                 </li>
                 <li className="filters-list-item">
-                  <label className="filter-label" for="genre">
+                  <label className="filter-label" htmlFor="genre">
                     Genre
                   </label>
                   <select
@@ -175,7 +175,7 @@ class AddGame extends Component {
                   </select>
                 </li>
                 <li className="filters-list-item">
-                  <label className="filter-label" for="maturity">
+                  <label className="filter-label" htmlFor="maturity">
                     Maturity rating
                   </label>
                   <select
@@ -192,7 +192,7 @@ class AddGame extends Component {
                   </select>
                 </li>
                 <li className="filters-list-item">
-                  <label className="filter-label" for="price">
+                  <label className="filter-label" htmlFor="price">
                     Price
                   </label>
                   <input
@@ -209,7 +209,7 @@ class AddGame extends Component {
           </div>
           <div className="add-bottom">
             <div className="filters-list-item">
-              <label className="filter-label" for="desc">
+              <label className="filter-label" htmlFor="desc">
                 Description
               </label>
               <textarea
