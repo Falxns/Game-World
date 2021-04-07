@@ -4,15 +4,41 @@ import Filters from "../../components/Filters/filters";
 import GameList from "../../components/GameList/gameList";
 
 class Home extends Component {
-  state = {};
+  state = { games: [], loading: true };
+
+  updateGamesList = (games) => {
+    this.setState({ games });
+  };
+
+  loadAllGames = () => {
+    fetch("http://localhost:3000/games")
+      .then((res) => {
+        res.json().then((games) => {
+          this.setState({ games, loading: false });
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  componentDidMount() {
+    this.loadAllGames();
+  }
+
   render() {
     document.title = "Game World";
     return (
       <>
         <h1 className="head-line">CATALOG</h1>
         <div className="cols-wrapper">
-          <Filters />
-          <GameList />
+          <Filters
+            updateGamesList={this.updateGamesList}
+            loadAllGames={this.loadAllGames}
+          />
+          <GameList
+            loading={this.state.loading}
+            games={this.state.games}
+            updateGamesList={this.updateGamesList}
+          />
         </div>
       </>
     );

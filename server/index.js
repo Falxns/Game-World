@@ -65,25 +65,25 @@ app.post("/games", function (req, res) {
     .catch(() => res.status(500).send());
 });
 
-app.get("/filter", function (req, res) {
-  const platform = req.query.platform;
-  const genre = req.query.genre;
-  const maturity = req.query.maturity;
-  Game.find({ platform, genre, maturity })
-    .lean()
-    .then((games) => {
-      res.render("index", { games });
-    })
-    .catch(() => res.send("404"));
-});
-
 app.get("/games", function (req, res) {
-  Game.find()
-    .lean()
-    .then((games) => {
-      res.send(games);
-    })
-    .catch(() => res.status(503).send());
+  if (req.query.platform || req.query.genre || req.query.maturity) {
+    platform = req.query.platform;
+    genre = req.query.genre;
+    maturity = req.query.maturity;
+    Game.find({ platform, genre, maturity })
+      .lean()
+      .then((games) => {
+        res.send(games);
+      })
+      .catch(() => res.status(404).send());
+  } else {
+    Game.find()
+      .lean()
+      .then((games) => {
+        res.send(games);
+      })
+      .catch(() => res.status(503).send());
+  }
 });
 
 app.get("/games/:gameId", function (req, res) {
