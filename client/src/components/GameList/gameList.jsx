@@ -9,7 +9,7 @@ class GameList extends Component {
         return true;
       } else return false;
     });
-    this.props.updateGamesList({ games });
+    this.props.updateGamesList(games);
   };
 
   renderGames() {
