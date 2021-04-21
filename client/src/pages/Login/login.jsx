@@ -25,10 +25,11 @@ class Login extends Component {
       body: fd,
     })
       .then((res) => {
+        const token = res.headers.get("x-auth-token");
         res
           .json()
           .then((data) => {
-            setUser(data);
+            setUser({ data, jwt: token });
             this.setState({ isRedirected: true });
           })
           .catch((err) => console.log(err));

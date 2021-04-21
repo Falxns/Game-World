@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
+import { userContext } from "../../context/user.context";
 
 class Registration extends Component {
   state = {
@@ -22,6 +23,8 @@ class Registration extends Component {
   };
 
   handleButtonClick = () => {
+    const { setUser } = this.context;
+
     const fd = new FormData();
     fd.append("nickname", this.state.nickname);
     fd.append("email", this.state.email);
@@ -32,10 +35,11 @@ class Registration extends Component {
       body: fd,
     })
       .then((res) => {
+        const token = res.headers.get("x-auth-token");
         res
           .json()
           .then((data) => {
-            console.log("Success:", data);
+            setUser({ data, jwt: token });
             this.setState({ isRedirected: true });
           })
           .catch((err) => console.log(err));
@@ -83,5 +87,7 @@ class Registration extends Component {
     );
   }
 }
+
+Registration.contextType = userContext;
 
 export default Registration;

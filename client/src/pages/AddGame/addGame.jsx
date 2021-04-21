@@ -2,6 +2,7 @@ import "./addGame.css";
 import React, { Component } from "react";
 import defaultImage from "../../assets/images/default-img.png";
 import { Redirect } from "react-router";
+import { userContext } from "../../context/user.context";
 
 class AddGame extends Component {
   constructor() {
@@ -77,9 +78,14 @@ class AddGame extends Component {
     fd.append("desc", this.state.description);
     fd.append("image", this.state.image);
 
+    const { user } = this.context;
+
     fetch("http://localhost:3000/games", {
       method: "POST",
       body: fd,
+      headers: {
+        "x-auth-token": user.jwt,
+      },
     })
       .then((res) => {
         res
@@ -236,5 +242,7 @@ class AddGame extends Component {
     );
   }
 }
+
+AddGame.contextType = userContext;
 
 export default AddGame;
