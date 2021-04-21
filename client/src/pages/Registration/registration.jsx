@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
 import { userContext } from "../../context/user.context";
+import "./registration.css";
 
 class Registration extends Component {
   state = {
@@ -58,31 +59,42 @@ class Registration extends Component {
       <>
         <h1 className="head-line">Registration</h1>
         <div className="registration-container">
-          <label htmlFor="">Nickname:</label>
+          <label className="container__label" htmlFor="nickname">
+            Nickname:
+          </label>
           <input
+            className="container__input"
             type="text"
-            name=""
-            id=""
+            id="nickname"
             value={this.state.nickname}
             onChange={this.handleNicknameChange}
           />
-          <label htmlFor="">Email:</label>
+          <label className="container__label" htmlFor="email">
+            Email:
+          </label>
           <input
+            className="container__input"
             type="email"
-            name=""
-            id=""
+            id="email"
             value={this.state.email}
             onChange={this.handleEmailChange}
           />
-          <label htmlFor="">Password:</label>
+          <label className="container__label" htmlFor="password">
+            Password:
+          </label>
           <input
+            className="container__input"
             type="password"
-            name=""
-            id=""
+            id="password"
             value={this.state.password}
             onChange={this.handlePasswordChange}
           />
-          <button onClick={this.handleButtonClick}>Submit</button>
+          <button
+            className="container__button"
+            onClick={this.handleButtonClick}
+          >
+            Submit
+          </button>
         </div>
         {this.redirectToHome()}
       </>

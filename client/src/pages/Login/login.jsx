@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
 import { userContext } from "../../context/user.context";
+import "./login.css";
 
 class Login extends Component {
   state = { email: "", password: "", isRedirected: false };
@@ -48,23 +49,32 @@ class Login extends Component {
       <>
         <h1 className="head-line">Login</h1>
         <div className="login-container">
-          <label htmlFor="">Email:</label>
+          <label className="container__label" htmlFor="email">
+            Email:
+          </label>
           <input
+            className="container__input"
             type="email"
-            name=""
-            id=""
+            id="email"
             value={this.state.email}
             onChange={this.handleEmailChange}
           />
-          <label htmlFor="">Password:</label>
+          <label className="container__label" htmlFor="password">
+            Password:
+          </label>
           <input
+            className="container__input"
             type="password"
-            name=""
-            id=""
+            id="password"
             value={this.state.password}
             onChange={this.handlePasswordChange}
           />
-          <button onClick={this.handleButtonClick}>Sign in</button>
+          <button
+            className="container__button"
+            onClick={this.handleButtonClick}
+          >
+            Sign in
+          </button>
         </div>
         {this.redirectToHome()}
       </>
