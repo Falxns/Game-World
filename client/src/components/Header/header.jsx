@@ -6,10 +6,17 @@ import plusIcon from "../../assets/icons/plus.svg";
 import { userContext } from "../../context/user.context";
 
 const Header = () => {
-  const { user } = useContext(userContext);
+  const { user, setUser } = useContext(userContext);
+
+  const handleLogout = () => {
+    setUser(null);
+  };
 
   const actions = user ? (
     <>
+      <button onClick={handleLogout} className="header__button">
+        Logout
+      </button>
       <Link to="/addgame" className="img-anchor">
         <img className="img-header" src={plusIcon} alt="Add" />
       </Link>

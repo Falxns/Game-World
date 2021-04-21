@@ -36,13 +36,13 @@ class GameCard extends Component {
 
   render() {
     const { gameData } = this.props;
+    const { user } = this.context;
 
     return (
       <div className="game-card">
-        <button
-          onClick={this.handleGameDeletion}
-          className="delete-button"
-        ></button>
+        {user && (
+          <button onClick={this.handleGameDeletion} className="delete-button" />
+        )}
         <Link to={"/games/" + gameData._id}>
           <img src={gameData.imageUrl} alt="game" className="game-cover" />
           <p className="game-title">{gameData.title}</p>
