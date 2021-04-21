@@ -10,6 +10,7 @@ const Header = () => {
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem("user");
   };
 
   const actions = user ? (

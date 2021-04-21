@@ -11,7 +11,7 @@ import Registration from "./pages/Registration/registration";
 import { userContext } from "./context/user.context";
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   return (
     <userContext.Provider value={{ user, setUser }}>

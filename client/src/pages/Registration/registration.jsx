@@ -39,7 +39,9 @@ class Registration extends Component {
         res
           .json()
           .then((data) => {
-            setUser({ data, jwt: token });
+            const user = { data, jwt: token };
+            setUser(user);
+            localStorage.setItem("user", JSON.stringify(user));
             this.setState({ isRedirected: true });
           })
           .catch((err) => console.log(err));
