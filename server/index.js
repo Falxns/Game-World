@@ -6,6 +6,7 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const auth = require("./middlewares/auth");
+const jwt = require("jsonwebtoken");
 
 mongoose
   .connect("mongodb://localhost/test", {
@@ -42,6 +43,10 @@ app.use(formData.format());
 app.use(formData.stream());
 app.use(formData.union());
 
+function generateToken(user) {
+  return jwt.sign({ _id: user._id }, "aghkshdjfdgfklyeru42fdg");
+}
+
 app.post("/registration", async function (req, res) {
   const { nickname, email, password } = req.body;
 
@@ -54,10 +59,31 @@ app.post("/registration", async function (req, res) {
     password: passwordHash,
   });
 
-  user
-    .save()
-    .then(() => res.send(user))
-    .catch(() => res.status(500).send());
+  user.save().catch(() => res.status(500).send());
+
+  const token = generateToken(user);
+
+  res
+    .header("Access-Control-Expose-Headers", "x-auth-token")
+    .header("x-auth-token", token)
+    .json(user);
+});
+
+app.post("/login", async function (req, res) {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) res.status(400).send();
+
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword) res.status(400).send();
+
+  const token = generateToken(user);
+
+  res
+    .header("Access-Control-Expose-Headers", "x-auth-token")
+    .header("x-auth-token", token)
+    .json(user);
 });
 
 app.post("/games", auth, function (req, res) {
