@@ -1,23 +1,23 @@
-footer {
+.footer {
   width: 100%;
   height: 60px;
   background-color: #1c0947;
   display: flex;
   justify-content: space-between;
-  padding: 30px 20px;
+  padding: 5px 20px;
   align-items: center;
 }
 
-.footer-icon {
+.footer__img {
   width: 50px;
   height: 50px;
 }
 
-.footer-p {
+.footer__p {
   font-size: 20px;
   color: #fff;
 }
 
-.img-anchor {
+.footer__a {
   height: 50px;
 }
