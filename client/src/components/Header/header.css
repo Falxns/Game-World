@@ -1,4 +1,4 @@
-header {
+.header {
   width: 100%;
   background-color: #7c40ff;
   display: flex;
@@ -7,26 +7,19 @@ header {
   padding: 5px 20px;
 }
 
-.header-title {
+.header__title {
+  width: 120px;
+  position: absolute;
+  left: calc(50% - 60px);
   color: #fff;
   font-family: "Marker", cursive;
 }
 
-.head-line {
-  font-size: 60px;
-  width: 100%;
-  height: 90px;
-  text-align: center;
-  color: #fff;
-  -webkit-text-stroke: #7c40ff 1.3px;
-  font-family: "Marker", cursive;
-}
-
-.img-anchor {
+.header__a {
   height: 50px;
 }
 
-.img-header {
+.header__img {
   height: 50px;
   width: 50px;
 }
@@ -37,10 +30,13 @@ header {
 }
 
 .header__button {
-  height: 100%;
+  height: 50px;
   font-size: 20px;
   color: #fff;
   background-color: transparent;
   border: 0;
+}
+
+.header__a_button:first-of-type {
   margin-right: 10px;
 }
