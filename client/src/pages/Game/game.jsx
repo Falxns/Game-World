@@ -21,45 +21,48 @@ const Game = () => {
   }, [gameId]);
 
   if (loading) {
-    return <h1 className="games-text">Loading...</h1>;
+    return <h1 className="game__warning">Loading...</h1>;
   }
 
   const renderPrice = () => {
     if (gameData.price)
       return (
-        <input className="button-play" type="button" value="Buy now"></input>
+        <input
+          className="picture__button"
+          type="button"
+          value="Buy now"
+        ></input>
       );
-    else
-      return (
-        <input className="button-play" type="button" value="Play now"></input>
-      );
+    return (
+      <input className="picture__button" type="button" value="Play now"></input>
+    );
   };
 
   return (
     <>
-      <div className="game-area">
-        <div className="picture-area">
-          <img className="image" src={gameData.imageUrl} alt="" />
-          <h1 className="head-line-game">{gameData.title}</h1>
+      <div className="game__content">
+        <div className="game__picture">
+          <img className="picture__img" src={gameData.imageUrl} alt="game" />
+          <h1 className="picture__header">{gameData.title}</h1>
           {renderPrice()}
         </div>
-        <ul className="info-list">
+        <ul className="game__ul">
           <li>
-            <p className="info-label">Platform: {gameData.platform}</p>
+            <p className="game__p">Platform: {gameData.platform}</p>
           </li>
           <li>
-            <p className="info-label">Genre: {gameData.genre}</p>
+            <p className="game__p">Genre: {gameData.genre}</p>
           </li>
           <li>
-            <p className="info-label"> Maturity rating: {gameData.maturity}+</p>
+            <p className="game__p"> Maturity rating: {gameData.maturity}+</p>
           </li>
         </ul>
       </div>
-      <div className="desc-area">
-        <p className="p-about">ABOUT</p>
-        <p className="p-title">{gameData.title}</p>
-        <img className="desc-arrow" src={arrowIcon} alt="" />
-        <p className="p-desc">{gameData.desc}</p>
+      <div className="game__description">
+        <p className="description__p_about">About</p>
+        <p className="description__p_title">{gameData.title}</p>
+        <img className="description__arrow" src={arrowIcon} alt="" />
+        <p className="description__p_desc">{gameData.desc}</p>
       </div>
     </>
   );

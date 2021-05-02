@@ -1,4 +1,20 @@
-.head-line-game {
+.game__warning {
+  font-size: 30px;
+  width: 100%;
+  height: 45px;
+  text-align: center;
+  color: #fff;
+  -webkit-text-stroke: #7c40ff 1.3px;
+  font-family: "Marker", cursive;
+}
+
+.game__content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.picture__header {
   font-size: 80px;
   width: 100%;
   height: 90px;
@@ -10,13 +26,7 @@
   top: 30vh;
 }
 
-.game-area {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.picture-area {
+.game__picture {
   width: 100%;
   height: calc(100vh - 120px);
   position: relative;
@@ -24,13 +34,13 @@
   flex-direction: column;
 }
 
-.image {
+.picture__img {
   object-fit: cover;
   width: 100%;
   height: calc(100vh - 120px);
 }
 
-.button-play {
+.picture__button {
   position: absolute;
   top: calc(30vh + 140px);
   left: 42vw;
@@ -40,7 +50,7 @@
   font-size: 30px;
 }
 
-.info-list {
+.game__ul {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -50,7 +60,7 @@
   padding: 0 10vw;
 }
 
-.info-label {
+.game__p {
   font-size: 20px;
   width: 100%;
   padding: 2px 5px;
@@ -58,7 +68,7 @@
   line-height: 60px;
 }
 
-.desc-area {
+.game__description {
   width: 100%;
   height: calc(100vh - 60px);
   display: flex;
@@ -68,13 +78,14 @@
   background-size: cover;
 }
 
-.p-about {
+.description__p_about {
   font-size: 30px;
   color: #fff;
   margin-top: 10vh;
+  text-transform: uppercase;
 }
 
-.p-title {
+.description__p_title {
   color: #fff;
   font-size: 80px;
   height: 100px;
@@ -82,105 +93,103 @@
   font-family: "Marker", cursive;
 }
 
-.desc-arrow {
+.description__arrow {
   height: 10vh;
   object-fit: cover;
   padding: 2vh 40vw;
 }
 
-.p-desc {
+.description__p_desc {
   font-size: 20px;
   color: #fff;
   padding: 0 20vw;
 }
 
 @media (max-width: 1100px) {
-  .head-line-game {
+  .picture__header {
     top: 10vh;
   }
 
-  .p-title {
+  .description__p_title {
     font-size: 60px;
   }
 
-  .button-play {
+  .picture__button {
     top: calc(30vh + 100px);
   }
 }
 @media (max-width: 800px) {
-  .head-line-game {
+  .picture__header {
     font-size: 60px;
   }
 
-  .p-title {
+  .description__p_title {
     font-size: 40px;
     height: 50px;
   }
 
-  .button-play {
+  .picture__button {
     font-size: 20px;
     top: calc(30vh + 80px);
   }
 }
 
 @media (max-width: 640px) {
-  .info-list {
+  .game__ul {
     padding: 0 15px;
   }
 
-  .info-label {
+  .game__p {
     font-size: 15px;
   }
 }
 
 @media (max-width: 530px) {
-  .head-line-game {
+  .picture__header {
     font-size: 50px;
   }
 
-  .p-about {
+  .description__p_about {
     font-size: 20px;
   }
 
-  .p-title {
+  .description__p_title {
     font-size: 30px;
     height: 80px;
     padding: 0 3vw;
   }
 
-  .p-desc {
+  .description__p_desc {
     font-size: 18px;
     padding: 0 10vw;
   }
 
-  .button-play {
+  .picture__button {
     width: 100px;
     left: calc(50vw - 50px);
     top: calc(30vh + 80px);
   }
 
-  .info-list {
+  .game__ul {
     flex-direction: column;
     height: 100%;
   }
-  .game-area {
+
+  .game__content {
     height: calc(100vh + 64px);
   }
 
-  .footer-icon,
-  .img-header {
-    width: 40px;
-    height: 40px;
-  }
-
-  .img-anchor {
+  .footer__img,
+  .header__img,
+  .footer__a,
+  .header__a_icon {
     width: 40px;
     height: 40px;
   }
 }
 
 @media (max-width: 400px) {
-  .head-line-game {
+  .picture__header {
     font-size: 40px;
   }
 }
