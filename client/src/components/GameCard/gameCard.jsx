@@ -2,6 +2,7 @@ import "./gameCard.css";
 import React, { Component } from "react";
 import freePrice from "../../assets/icons/free.svg";
 import { Link } from "react-router-dom";
+import { userContext } from "../../context/user.context";
 
 class GameCard extends Component {
   state = {};
@@ -13,8 +14,13 @@ class GameCard extends Component {
   }
 
   handleGameDeletion = () => {
+    const { user } = this.context;
+
     fetch("http://localhost:3000/games/" + this.props.gameData._id, {
       method: "DELETE",
+      headers: {
+        "x-auth-token": user.jwt,
+      },
     })
       .then((res) => {
         res
@@ -30,13 +36,13 @@ class GameCard extends Component {
 
   render() {
     const { gameData } = this.props;
+    const { user } = this.context;
 
     return (
       <div className="game-card">
-        <button
-          onClick={this.handleGameDeletion}
-          className="delete-button"
-        ></button>
+        {user && (
+          <button onClick={this.handleGameDeletion} className="delete-button" />
+        )}
         <Link to={"/games/" + gameData._id}>
           <img src={gameData.imageUrl} alt="game" className="game-cover" />
           <p className="game-title">{gameData.title}</p>
@@ -46,5 +52,7 @@ class GameCard extends Component {
     );
   }
 }
+
+GameCard.contextType = userContext;
 
 export default GameCard;

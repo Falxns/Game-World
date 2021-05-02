@@ -3,6 +3,7 @@
   width: 100%;
   height: 90px;
   text-align: center;
+  text-transform: uppercase;
   color: #fff;
   -webkit-text-stroke: #7c40ff 1.3px;
   font-family: "Marker", cursive;

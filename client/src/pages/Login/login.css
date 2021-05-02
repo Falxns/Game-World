@@ -1,0 +1,32 @@
+.login-container {
+  margin: 0 auto;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.container__label {
+  background-color: #7c40ff;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 2px 5px;
+  width: 100%;
+  color: #fff;
+  text-align: center;
+}
+
+.container__input {
+  font-size: 20px;
+  padding: 5px 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  background-color: #fff;
+}
+
+.container__button {
+  font-size: 30px;
+  font-weight: bold;
+  height: 100px;
+  background-color: #7c40ff;
+  color: #fff;
+}

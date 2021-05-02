@@ -4,6 +4,9 @@ const formData = require("express-form-data");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const auth = require("./middlewares/auth");
+const jwt = require("jsonwebtoken");
 
 mongoose
   .connect("mongodb://localhost/test", {
@@ -24,6 +27,13 @@ const gameSchema = new mongoose.Schema({
 });
 const Game = mongoose.model("Game", gameSchema, "games");
 
+const userSchema = new mongoose.Schema({
+  nickname: String,
+  email: String,
+  password: String,
+});
+const User = mongoose.model("User", userSchema, "users");
+
 const app = express();
 app.use(express.static("public"));
 app.use(cors());
@@ -33,7 +43,50 @@ app.use(formData.format());
 app.use(formData.stream());
 app.use(formData.union());
 
-app.post("/games", function (req, res) {
+function generateToken(user) {
+  return jwt.sign({ _id: user._id }, "aghkshdjfdgfklyeru42fdg");
+}
+
+app.post("/registration", async function (req, res) {
+  const { nickname, email, password } = req.body;
+
+  const salt = await bcrypt.genSalt();
+  const passwordHash = await bcrypt.hash(password, salt);
+
+  const user = new User({
+    nickname,
+    email,
+    password: passwordHash,
+  });
+
+  user.save().catch(() => res.status(500).send());
+
+  const token = generateToken(user);
+
+  res
+    .header("Access-Control-Expose-Headers", "x-auth-token")
+    .header("x-auth-token", token)
+    .json(user);
+});
+
+app.post("/login", async function (req, res) {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) res.status(400).send();
+
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword) res.status(400).send();
+
+  const token = generateToken(user);
+
+  res
+    .header("Access-Control-Expose-Headers", "x-auth-token")
+    .header("x-auth-token", token)
+    .json(user);
+});
+
+app.post("/games", auth, function (req, res) {
   const { title, platform, genre, maturity, price, desc, image } = req.body;
 
   let imageName = "";
@@ -104,7 +157,7 @@ app.get("/games/:gameId", function (req, res) {
     .catch(() => res.status(404).send());
 });
 
-app.delete("/games/:gameId", function (req, res) {
+app.delete("/games/:gameId", auth, function (req, res) {
   const gameId = req.params.gameId;
 
   Game.findByIdAndDelete(gameId)
