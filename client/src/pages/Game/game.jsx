@@ -38,6 +38,8 @@ const Game = () => {
     );
   };
 
+  const socket = new WebSocket("ws://localhost:3000");
+
   const renderComments = () => {
     return (
       <>
@@ -87,6 +89,15 @@ const Game = () => {
       <div className="game__comments">
         <h3 className="comments__header">Comments</h3>
         {renderComments()}
+        <div className="game__new-comment">
+          <textarea
+            className="new-comment__textarea"
+            cols="30"
+            rows="10"
+            placeholder="Write your comment here..."
+          ></textarea>
+          <button className="new-comment__button">Post</button>
+        </div>
       </div>
     </>
   );
