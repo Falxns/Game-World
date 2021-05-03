@@ -57,8 +57,8 @@ class Registration extends Component {
   render() {
     return (
       <>
-        <h1 className="head-line">Registration</h1>
-        <div className="registration-container">
+        <h1 className="registration__header">Registration</h1>
+        <div className="registration__container">
           <label className="container__label" htmlFor="nickname">
             Nickname:
           </label>
