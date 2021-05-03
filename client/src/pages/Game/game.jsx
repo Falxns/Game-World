@@ -38,6 +38,26 @@ const Game = () => {
     );
   };
 
+  const renderComments = () => {
+    return (
+      <>
+        <div className="comments__div">
+          <h5 className="comments__username">Alexey</h5>
+          <p className="comments__text">
+            kjdffdjfdgljdgdfgjlhrejhjdfghdnbmfnvmdfngldfgdfgdfgkldfjgl
+          </p>
+        </div>
+        <div className="comments__div">
+          <h5 className="comments__username">Artyom</h5>
+          <p className="comments__text">
+            kjdffdjfdgljdgdfgjlhrejhjdf ghdnbmfnvmdfngl dfgdfgdjkj1
+            u4iy3uihjkfhgudsklwefgkldfjgl
+          </p>
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       <div className="game__content">
@@ -63,6 +83,10 @@ const Game = () => {
         <p className="description__p_title">{gameData.title}</p>
         <img className="description__arrow" src={arrowIcon} alt="" />
         <p className="description__p_desc">{gameData.desc}</p>
+      </div>
+      <div className="game__comments">
+        <h3 className="comments__header">Comments</h3>
+        {renderComments()}
       </div>
     </>
   );
