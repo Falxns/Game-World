@@ -7,6 +7,8 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const auth = require("./middlewares/auth");
 const jwt = require("jsonwebtoken");
+const http = require("http");
+const { Server } = require("socket.io");
 
 mongoose
   .connect("mongodb://localhost/test", {
@@ -34,6 +36,13 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema, "users");
 
+const commentSchema = new mongoose.Schema({
+  gameId: String,
+  nickname: String,
+  text: String,
+});
+const Comment = mongoose.model("Comment", commentSchema, "comments");
+
 const app = express();
 app.use(express.static("public"));
 app.use(cors());
@@ -42,6 +51,14 @@ app.use(formData.parse());
 app.use(formData.format());
 app.use(formData.stream());
 app.use(formData.union());
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3001",
+    methods: ["GET", "POST", "DELETE"],
+  },
+});
 
 function generateToken(user) {
   return jwt.sign({ _id: user._id }, "aghkshdjfdgfklyeru42fdg");
@@ -165,4 +182,38 @@ app.delete("/games/:gameId", auth, function (req, res) {
     .catch(() => res.status(404).send());
 });
 
-app.listen(3000, () => console.log("Server is listening on port 3000.."));
+io.on("connection", (socket) => {
+  console.log("user connected");
+  socket.on("disconnect", () => {
+    console.log("disconnect");
+  });
+  socket.on("message", (type, gameId, nickname, text) => {
+    switch (type) {
+      case "comments":
+        Comment.find({ gameId }).then((comments) =>
+          socket.send("comments", comments)
+        );
+        break;
+      case "add-comment":
+        const comment = new Comment({
+          gameId,
+          nickname,
+          text,
+        });
+        comment
+          .save()
+          .then(() => {
+            Comment.find({ gameId }).then((comments) =>
+              socket.send("comments", comments)
+            );
+          })
+          .catch((e) => console.log(e));
+
+        break;
+      default:
+        break;
+    }
+  });
+});
+
+server.listen(3000, () => console.log("Server is listening on port 3000.."));

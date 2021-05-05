@@ -55,6 +55,7 @@ class Registration extends Component {
   };
 
   render() {
+    document.title = "Sign up";
     return (
       <>
         <h1 className="registration__header">Registration</h1>

@@ -45,6 +45,7 @@ class Login extends Component {
   };
 
   render() {
+    document.title = "Login";
     return (
       <>
         <h1 className="login__header">Login</h1>

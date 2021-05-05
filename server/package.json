@@ -23,6 +23,7 @@
     "express-form-data": "^2.0.14",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.4",
-    "mongoose": "^5.11.15"
+    "mongoose": "^5.11.15",
+    "socket.io": "^4.0.1"
   }
 }

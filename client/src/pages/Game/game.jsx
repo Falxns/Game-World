@@ -2,10 +2,14 @@ import "./game.css";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import arrowIcon from "../../assets/icons/double-arrow.svg";
+import { io } from "socket.io-client";
 
 const Game = () => {
   const { gameId } = useParams();
 
+  const [socket, setSocket] = useState(null);
+  const [text, setText] = useState("");
+  const [comments, setComments] = useState([]);
   const [gameData, setGameData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,6 +22,32 @@ const Game = () => {
         });
       })
       .catch((err) => console.log(err));
+  }, [gameId]);
+
+  useEffect(() => {
+    const socket = io("ws://localhost:3000");
+    socket.on("connect_error", (m) => {
+      console.log("error", m);
+    });
+    socket.on("connect", () => {
+      console.log("socket.io connection open");
+      socket.send("comments", gameId);
+    });
+    socket.on("message", (type, comments) => {
+      switch (type) {
+        case "comments":
+          console.log(comments);
+          setComments(comments);
+          break;
+        default:
+          break;
+      }
+    });
+    setSocket(socket);
+    return () => {
+      socket.disconnect();
+      console.log("socket.io disconnected");
+    };
   }, [gameId]);
 
   if (loading) {
@@ -38,26 +68,24 @@ const Game = () => {
     );
   };
 
-  const socket = new WebSocket("ws://localhost:3000");
+  const renderComments = () =>
+    comments.map((comment) => {
+      return (
+        <div key={comment._id} className="comments__div">
+          <h5 className="comments__username">{comment.nickname}</h5>
+          <p className="comments__text">{comment.text}</p>
+        </div>
+      );
+    });
 
-  const renderComments = () => {
-    return (
-      <>
-        <div className="comments__div">
-          <h5 className="comments__username">Alexey</h5>
-          <p className="comments__text">
-            kjdffdjfdgljdgdfgjlhrejhjdfghdnbmfnvmdfngldfgdfgdfgkldfjgl
-          </p>
-        </div>
-        <div className="comments__div">
-          <h5 className="comments__username">Artyom</h5>
-          <p className="comments__text">
-            kjdffdjfdgljdgdfgjlhrejhjdf ghdnbmfnvmdfngl dfgdfgdjkj1
-            u4iy3uihjkfhgudsklwefgkldfjgl
-          </p>
-        </div>
-      </>
-    );
+  const sendComment = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    socket.send("add-comment", gameId, user.data.nickname, text);
+    setText("");
+  };
+
+  const handleTextChange = (e) => {
+    setText(e.target.value);
   };
 
   return (
@@ -95,8 +123,12 @@ const Game = () => {
             cols="30"
             rows="10"
             placeholder="Write your comment here..."
+            value={text}
+            onChange={handleTextChange}
           ></textarea>
-          <button className="new-comment__button">Post</button>
+          <button onClick={sendComment} className="new-comment__button">
+            Post
+          </button>
         </div>
       </div>
     </>
