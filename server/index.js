@@ -193,6 +193,7 @@ io.on("connection", (socket) => {
         Comment.find({ gameId }).then((comments) =>
           socket.send("comments", comments)
         );
+
         break;
       case "add-comment":
         const comment = new Comment({
@@ -207,6 +208,17 @@ io.on("connection", (socket) => {
               socket.send("comments", comments)
             );
           })
+          .catch((e) => console.log(e));
+
+        break;
+
+      case "delete-comment":
+        Comment.findOneAndDelete({ gameId, nickname, text })
+          .then(() =>
+            Comment.find({ gameId })
+              .then((comments) => socket.send("comments", comments))
+              .catch((e) => console.log(e))
+          )
           .catch((e) => console.log(e));
 
         break;

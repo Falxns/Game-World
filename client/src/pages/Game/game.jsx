@@ -68,12 +68,30 @@ const Game = () => {
     );
   };
 
+  const handleCommentDeletion = (e) => {
+    const parent = e.target.parentElement;
+    socket.send(
+      "delete-comment",
+      gameId,
+      parent.children[1].innerText,
+      parent.children[2].innerText
+    );
+  };
+
   const renderComments = () =>
     comments.map((comment) => {
       return (
         <div key={comment._id} className="comments__div">
-          <h5 className="comments__username">{comment.nickname}</h5>
-          <p className="comments__text">{comment.text}</p>
+          <button
+            onClick={handleCommentDeletion}
+            className="comments__button_delete"
+          />
+          <h5 className="comments__username" value={comment.nickname}>
+            {comment.nickname}
+          </h5>
+          <p className="comments__text" value={comment.text}>
+            {comment.text}
+          </p>
         </div>
       );
     });

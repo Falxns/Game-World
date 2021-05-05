@@ -119,6 +119,7 @@
 }
 
 .comments__div {
+  position: relative;
   padding: 10px;
   margin-bottom: 15px;
   border: 2px solid #7c40ff;
@@ -132,6 +133,27 @@
 
 .comments__text {
   font-size: 25px;
+}
+
+.comments__button_delete {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background-color: transparent;
+  background-size: contain;
+  background-image: url("../../assets/icons/delete.svg");
+}
+
+.comments__div:hover .comments__button_delete {
+  display: block;
+}
+
+.comments__button_delete:hover {
+  background-image: url("../../assets/icons/delete-active.svg");
 }
 
 .game__new-comment {
