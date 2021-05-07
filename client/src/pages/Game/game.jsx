@@ -12,6 +12,7 @@ const Game = () => {
   const [comments, setComments] = useState([]);
   const [gameData, setGameData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   useEffect(() => {
     fetch("http://localhost:3000/games/" + gameId)
@@ -76,10 +77,18 @@ const Game = () => {
     comments.map((comment) => {
       return (
         <div key={comment._id} className="comments__div">
-          <button
-            onClick={() => handleCommentDeletion(comment._id)}
-            className="comments__button_delete"
-          />
+          {user ? (
+            user.data.nickname === comment.nickname ? (
+              <button
+                onClick={() => handleCommentDeletion(comment._id)}
+                className="comments__button_delete"
+              />
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
           <h5 className="comments__username">{comment.nickname}</h5>
           <p className="comments__text">{comment.text}</p>
         </div>
@@ -87,7 +96,6 @@ const Game = () => {
     });
 
   const sendComment = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
     socket.send({
       type: "add-comment",
       gameId,
@@ -130,19 +138,23 @@ const Game = () => {
       <div className="game__comments">
         <h3 className="comments__header">Comments</h3>
         {renderComments()}
-        <div className="game__new-comment">
-          <textarea
-            className="new-comment__textarea"
-            cols="30"
-            rows="10"
-            placeholder="Write your comment here..."
-            value={text}
-            onChange={handleTextChange}
-          ></textarea>
-          <button onClick={sendComment} className="new-comment__button">
-            Post
-          </button>
-        </div>
+        {user ? (
+          <div className="game__new-comment">
+            <textarea
+              className="new-comment__textarea"
+              cols="30"
+              rows="10"
+              placeholder="Write your comment here..."
+              value={text}
+              onChange={handleTextChange}
+            ></textarea>
+            <button onClick={sendComment} className="new-comment__button">
+              Post
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );
