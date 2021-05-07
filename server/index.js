@@ -45,6 +45,7 @@ const Comment = mongoose.model("Comment", commentSchema, "comments");
 
 const ratingSchema = new mongoose.Schema({
   gameId: String,
+  userId: String,
   value: Number,
 });
 const Rating = mongoose.model("Rating", ratingSchema, "ratings");
@@ -242,24 +243,49 @@ io.on("connection", (socket) => {
         break;
 
       case "add-rating":
-        const rating = new Rating({
-          gameId: msg.gameId,
-          value: msg.value,
-        });
-        rating
-          .save()
-          .then(() => {
-            Rating.find({ gameId: msg.gameId }).then((ratings) => {
-              let sum = 0,
-                i = 0;
-              for (i; i < ratings.length; i++) {
-                sum += ratings[i].value;
-              }
-              const result = sum / i;
-              socket.send({ type: "rating", value: result });
-            });
+        Rating.findOne({ gameId: msg.gameId, userId: msg.userId })
+          .then((ratingFound) => {
+            if (!ratingFound) {
+              const rating = new Rating({
+                gameId: msg.gameId,
+                userId: msg.userId,
+                value: msg.value,
+              });
+              rating
+                .save()
+                .then(() => {
+                  Rating.find({ gameId: msg.gameId }).then((ratings) => {
+                    let sum = 0,
+                      i = 0;
+                    for (i; i < ratings.length; i++) {
+                      sum += ratings[i].value;
+                    }
+                    const result = sum / i;
+                    socket.send({ type: "rating", value: result });
+                  });
+                })
+                .catch((e) => console.log(e));
+            } else {
+              Rating.findOneAndUpdate(
+                { gameId: msg.gameId, userId: msg.userId },
+                { value: msg.value }
+              )
+                .then(() => {
+                  Rating.find({ gameId: msg.gameId }).then((ratings) => {
+                    let sum = 0,
+                      i = 0;
+                    for (i; i < ratings.length; i++) {
+                      sum += ratings[i].value;
+                    }
+                    const result = sum / i;
+                    socket.send({ type: "rating", value: result });
+                  });
+                })
+                .catch((e) => console.log(e));
+            }
           })
           .catch((e) => console.log(e));
+
         break;
 
       default:

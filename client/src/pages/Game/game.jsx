@@ -133,7 +133,7 @@ const Game = () => {
     });
 
   const sendRating = (value) => {
-    socket.send({ type: "add-rating", gameId, value });
+    socket.send({ type: "add-rating", gameId, userId: user.data._id, value });
   };
 
   return (
