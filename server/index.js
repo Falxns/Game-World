@@ -43,6 +43,12 @@ const commentSchema = new mongoose.Schema({
 });
 const Comment = mongoose.model("Comment", commentSchema, "comments");
 
+const ratingSchema = new mongoose.Schema({
+  gameId: String,
+  value: Number,
+});
+const Rating = mongoose.model("Rating", ratingSchema, "ratings");
+
 const app = express();
 app.use(express.static("public"));
 app.use(cors());
@@ -222,6 +228,40 @@ io.on("connection", (socket) => {
           .catch((e) => console.log(e));
 
         break;
+
+      case "rating":
+        Rating.find({ gameId: msg.gameId }).then((ratings) => {
+          let sum = 0,
+            i = 0;
+          for (i; i < ratings.length; i++) {
+            sum += ratings[i].value;
+          }
+          const result = sum / i;
+          socket.send({ type: "rating", value: result });
+        });
+        break;
+
+      case "add-rating":
+        const rating = new Rating({
+          gameId: msg.gameId,
+          value: msg.value,
+        });
+        rating
+          .save()
+          .then(() => {
+            Rating.find({ gameId: msg.gameId }).then((ratings) => {
+              let sum = 0,
+                i = 0;
+              for (i; i < ratings.length; i++) {
+                sum += ratings[i].value;
+              }
+              const result = sum / i;
+              socket.send({ type: "rating", value: result });
+            });
+          })
+          .catch((e) => console.log(e));
+        break;
+
       default:
         break;
     }

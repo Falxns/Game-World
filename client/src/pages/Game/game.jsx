@@ -11,9 +11,10 @@ const Game = () => {
   const [socket, setSocket] = useState(null);
   const [text, setText] = useState("");
   const [comments, setComments] = useState([]);
+  const [rating, setRating] = useState(0);
   const [gameData, setGameData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { user, setUser } = useContext(userContext);
+  const { user } = useContext(userContext);
 
   useEffect(() => {
     fetch("http://localhost:3000/games/" + gameId)
@@ -34,12 +35,18 @@ const Game = () => {
     socket.on("connect", () => {
       console.log("socket.io connection open");
       socket.send({ type: "comments", gameId });
+      socket.send({ type: "rating", gameId });
     });
     socket.on("message", (msg) => {
       switch (msg.type) {
         case "comments":
           console.log(msg.comments);
           setComments(msg.comments);
+          break;
+
+        case "rating":
+          console.log(msg.value);
+          setRating(msg.value);
           break;
         default:
           break;
@@ -110,6 +117,47 @@ const Game = () => {
     setText(e.target.value);
   };
 
+  const renderRating = () => {
+    return (
+      <div className="rating__list">
+        <button
+          onClick={() => sendRating(1)}
+          className={
+            rating > 0 ? "rating__star rating__star_set" : "rating__star"
+          }
+        ></button>
+        <button
+          onClick={() => sendRating(2)}
+          className={
+            rating > 1 ? "rating__star rating__star_set" : "rating__star"
+          }
+        ></button>
+        <button
+          onClick={() => sendRating(3)}
+          className={
+            rating > 2 ? "rating__star rating__star_set" : "rating__star"
+          }
+        ></button>
+        <button
+          onClick={() => sendRating(4)}
+          className={
+            rating > 3 ? "rating__star rating__star_set" : "rating__star"
+          }
+        ></button>
+        <button
+          onClick={() => sendRating(5)}
+          className={
+            rating > 4 ? "rating__star rating__star_set" : "rating__star"
+          }
+        ></button>
+      </div>
+    );
+  };
+
+  const sendRating = (value) => {
+    socket.send({ type: "add-rating", gameId, value });
+  };
+
   return (
     <>
       <div className="game__content">
@@ -135,6 +183,10 @@ const Game = () => {
         <p className="description__p_title">{gameData.title}</p>
         <img className="description__arrow" src={arrowIcon} alt="" />
         <p className="description__p_desc">{gameData.desc}</p>
+      </div>
+      <div className="game__rating">
+        <h3 className="rating__header">Rating</h3>
+        {renderRating()}
       </div>
       <div className="game__comments">
         <h3 className="comments__header">Comments</h3>
