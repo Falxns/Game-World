@@ -31,13 +31,13 @@ const Game = () => {
     });
     socket.on("connect", () => {
       console.log("socket.io connection open");
-      socket.send("comments", gameId);
+      socket.send({ type: "comments", gameId });
     });
-    socket.on("message", (type, comments) => {
-      switch (type) {
+    socket.on("message", (msg) => {
+      switch (msg.type) {
         case "comments":
-          console.log(comments);
-          setComments(comments);
+          console.log(msg.comments);
+          setComments(msg.comments);
           break;
         default:
           break;
@@ -68,14 +68,8 @@ const Game = () => {
     );
   };
 
-  const handleCommentDeletion = (e) => {
-    const parent = e.target.parentElement;
-    socket.send(
-      "delete-comment",
-      gameId,
-      parent.children[1].innerText,
-      parent.children[2].innerText
-    );
+  const handleCommentDeletion = (commentId) => {
+    socket.send({ type: "delete-comment", commentId, gameId });
   };
 
   const renderComments = () =>
@@ -83,22 +77,23 @@ const Game = () => {
       return (
         <div key={comment._id} className="comments__div">
           <button
-            onClick={handleCommentDeletion}
+            onClick={() => handleCommentDeletion(comment._id)}
             className="comments__button_delete"
           />
-          <h5 className="comments__username" value={comment.nickname}>
-            {comment.nickname}
-          </h5>
-          <p className="comments__text" value={comment.text}>
-            {comment.text}
-          </p>
+          <h5 className="comments__username">{comment.nickname}</h5>
+          <p className="comments__text">{comment.text}</p>
         </div>
       );
     });
 
   const sendComment = () => {
     const user = JSON.parse(localStorage.getItem("user"));
-    socket.send("add-comment", gameId, user.data.nickname, text);
+    socket.send({
+      type: "add-comment",
+      gameId,
+      nickname: user.data.nickname,
+      text,
+    });
     setText("");
   };
 

@@ -187,25 +187,25 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("disconnect");
   });
-  socket.on("message", (type, gameId, nickname, text) => {
-    switch (type) {
+  socket.on("message", (msg) => {
+    switch (msg.type) {
       case "comments":
-        Comment.find({ gameId }).then((comments) =>
-          socket.send("comments", comments)
+        Comment.find({ gameId: msg.gameId }).then((comments) =>
+          socket.send({ type: "comments", comments })
         );
 
         break;
       case "add-comment":
         const comment = new Comment({
-          gameId,
-          nickname,
-          text,
+          gameId: msg.gameId,
+          nickname: msg.nickname,
+          text: msg.text,
         });
         comment
           .save()
           .then(() => {
-            Comment.find({ gameId }).then((comments) =>
-              socket.send("comments", comments)
+            Comment.find({ gameId: msg.gameId }).then((comments) =>
+              socket.send({ type: "comments", comments })
             );
           })
           .catch((e) => console.log(e));
@@ -213,10 +213,10 @@ io.on("connection", (socket) => {
         break;
 
       case "delete-comment":
-        Comment.findOneAndDelete({ gameId, nickname, text })
+        Comment.findByIdAndDelete(msg.commentId)
           .then(() =>
-            Comment.find({ gameId })
-              .then((comments) => socket.send("comments", comments))
+            Comment.find({ gameId: msg.gameId })
+              .then((comments) => socket.send({ type: "comments", comments }))
               .catch((e) => console.log(e))
           )
           .catch((e) => console.log(e));
