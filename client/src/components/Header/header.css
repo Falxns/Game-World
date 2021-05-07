@@ -40,3 +40,10 @@
 .header__a_button:first-of-type {
   margin-right: 10px;
 }
+
+.header__nickname {
+  font-size: 24px;
+  color: #fff;
+  font-family: "Marker", cursive;
+  margin-right: 30px;
+}

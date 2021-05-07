@@ -15,6 +15,7 @@ const Header = () => {
 
   const actions = user ? (
     <>
+      <p className="header__nickname">Hi, {user.data.nickname}</p>
       <button
         onClick={handleLogout}
         className="header__a_button header__button"
