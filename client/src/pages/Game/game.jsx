@@ -117,42 +117,20 @@ const Game = () => {
     setText(e.target.value);
   };
 
-  const renderRating = () => {
-    return (
-      <div className="rating__list">
+  const renderRating = () =>
+    [0, 1, 2, 3, 4].map((value) => {
+      return (
         <button
-          onClick={() => sendRating(1)}
+          key={value}
+          onClick={() => (user ? sendRating(value + 1) : null)}
           className={
-            rating > 0 ? "rating__star rating__star_set" : "rating__star"
+            rating > value + 0.5
+              ? "rating__star rating__star_set"
+              : "rating__star"
           }
         ></button>
-        <button
-          onClick={() => sendRating(2)}
-          className={
-            rating > 1 ? "rating__star rating__star_set" : "rating__star"
-          }
-        ></button>
-        <button
-          onClick={() => sendRating(3)}
-          className={
-            rating > 2 ? "rating__star rating__star_set" : "rating__star"
-          }
-        ></button>
-        <button
-          onClick={() => sendRating(4)}
-          className={
-            rating > 3 ? "rating__star rating__star_set" : "rating__star"
-          }
-        ></button>
-        <button
-          onClick={() => sendRating(5)}
-          className={
-            rating > 4 ? "rating__star rating__star_set" : "rating__star"
-          }
-        ></button>
-      </div>
-    );
-  };
+      );
+    });
 
   const sendRating = (value) => {
     socket.send({ type: "add-rating", gameId, value });
@@ -186,7 +164,7 @@ const Game = () => {
       </div>
       <div className="game__rating">
         <h3 className="rating__header">Rating</h3>
-        {renderRating()}
+        <div className="rating__list">{renderRating()}</div>
       </div>
       <div className="game__comments">
         <h3 className="comments__header">Comments</h3>
