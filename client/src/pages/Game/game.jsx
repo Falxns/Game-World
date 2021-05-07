@@ -1,8 +1,9 @@
 import "./game.css";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import arrowIcon from "../../assets/icons/double-arrow.svg";
 import { io } from "socket.io-client";
+import { userContext } from "../../context/user.context";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -12,7 +13,7 @@ const Game = () => {
   const [comments, setComments] = useState([]);
   const [gameData, setGameData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const { user, setUser } = useContext(userContext);
 
   useEffect(() => {
     fetch("http://localhost:3000/games/" + gameId)
