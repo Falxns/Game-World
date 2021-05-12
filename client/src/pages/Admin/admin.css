@@ -1,0 +1,66 @@
+.admin__container {
+  width: 500px;
+  margin: 15px auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin__button {
+  font-size: 30px;
+  font-weight: bold;
+  width: 200px;
+  height: 60px;
+  background-color: #7c40ff;
+  color: #fff;
+}
+
+.admin__table {
+  width: calc(100% - 30px);
+  margin: 0 15px;
+  border-collapse: collapse;
+  border: 3px solid #7c40ff;
+}
+
+.table__head {
+  font-size: 24px;
+}
+
+.table__th {
+  border: 3px solid #7c40ff;
+}
+
+.table__th_maturity {
+  width: 8%;
+}
+
+.table__th_price {
+  width: 5%;
+}
+
+.table__th_delete {
+  width: 5%;
+}
+
+.table__body {
+  font-size: 20px;
+}
+
+.table__td {
+  padding: 5px 5px;
+  border: 3px solid #7c40ff;
+}
+
+.table__button {
+  display: block;
+  margin: auto;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background-color: transparent;
+  background-size: contain;
+  background-image: url("../../assets/icons/delete.svg");
+}
+
+.table__button:hover {
+  background-image: url("../../assets/icons/delete-active.svg");
+}
