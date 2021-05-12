@@ -9,6 +9,7 @@ const auth = require("./middlewares/auth");
 const jwt = require("jsonwebtoken");
 const http = require("http");
 const { Server } = require("socket.io");
+const { ApolloServer, gql } = require("apollo-server-express");
 
 mongoose
   .connect("mongodb://localhost/test", {
@@ -293,5 +294,21 @@ io.on("connection", (socket) => {
     }
   });
 });
+
+const typeDefs = gql`
+  type Query {
+    hello: String!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    hello: () => "hello world",
+  },
+};
+
+const serverGql = new ApolloServer({ typeDefs, resolvers });
+
+serverGql.applyMiddleware({ app });
 
 server.listen(3000, () => console.log("Server is listening on port 3000.."));
