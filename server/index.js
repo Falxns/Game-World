@@ -200,6 +200,30 @@ app.delete("/games/:gameId", auth, function (req, res) {
   Game.findByIdAndDelete(gameId)
     .then((game) => res.send(game))
     .catch(() => res.status(404).send());
+
+  Rating.find()
+    .then((ratings) =>
+      ratings.map((rate) => {
+        if (rate.gameId === gameId) {
+          Rating.findByIdAndDelete(rate._id).catch(() =>
+            res.status(404).send()
+          );
+        }
+      })
+    )
+    .catch(() => res.status(404).send());
+
+  Comment.find()
+    .then((comments) =>
+      comments.map((comment) => {
+        if (comment.gameId === gameId) {
+          Comment.findByIdAndDelete(comment._id).catch(() =>
+            res.status(404).send()
+          );
+        }
+      })
+    )
+    .catch(() => res.status(404).send());
 });
 
 io.on("connection", (socket) => {
