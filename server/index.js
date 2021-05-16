@@ -307,6 +307,10 @@ const typeDefs = gql`
     users: [User!]!
   }
 
+  type Mutation {
+    deleteGame(gameId: ID!): Game!
+  }
+
   type Game {
     id: ID!
     title: String!
@@ -330,6 +334,10 @@ const resolvers = {
   Query: {
     games: () => Game.find(),
     users: () => User.find(),
+  },
+  Mutation: {
+    deleteGame: async (root, { gameId }) =>
+      await Game.findByIdAndDelete(gameId),
   },
 };
 

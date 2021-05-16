@@ -7,6 +7,7 @@ class Admin extends Component {
     games: [],
     users: [],
     choice: "games",
+    client: null,
   };
 
   componentDidMount = () => {
@@ -19,6 +20,7 @@ class Admin extends Component {
         query: gql`
           query {
             games {
+              id
               title
               platform
               genre
@@ -41,13 +43,13 @@ class Admin extends Component {
           }
         `,
       })
-      .then((res) => this.setState({ users: res.data.users }));
+      .then((res) => this.setState({ client: client, users: res.data.users }));
   };
 
   renderGames = () =>
     this.state.games.map((game) => {
       return (
-        <tr>
+        <tr key={game.id}>
           <td className="table__td">{game.title}</td>
           <td className="table__td">{game.platform}</td>
           <td className="table__td">{game.genre}</td>
@@ -56,7 +58,11 @@ class Admin extends Component {
             {game.price ? game.price + "$" : "Free"}
           </td>
           <td>
-            <button className="table__button"></button>
+            <button
+              className="table__button"
+              value={game.id}
+              onClick={this.handleGameDelete}
+            ></button>
           </td>
         </tr>
       );
@@ -65,7 +71,7 @@ class Admin extends Component {
   renderUsers = () =>
     this.state.users.map((user) => {
       return (
-        <tr>
+        <tr key={user.email}>
           <td className="table__td">{user.nickname}</td>
           <td className="table__td">{user.email}</td>
           <td className="table__td">{user.isAdmin ? "Yes" : "No"}</td>
@@ -120,6 +126,28 @@ class Admin extends Component {
 
   handleUsersClick = () => {
     this.setState({ choice: "users" });
+  };
+
+  handleGameDelete = (event) => {
+    const deleteGame = gql`
+      mutation deleteGame($gameId: ID!) {
+        deleteGame(gameId: $gameId) {
+          id
+        }
+      }
+    `;
+    this.state.client
+      .mutate({
+        mutation: deleteGame,
+        variables: { gameId: event.target.value },
+      })
+      .then(() =>
+        this.setState({
+          games: this.state.games.filter(
+            (game) => game.id !== event.target.value
+          ),
+        })
+      );
   };
 
   render() {
