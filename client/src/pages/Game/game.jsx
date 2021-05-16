@@ -67,22 +67,25 @@ const Game = () => {
     socket.send({ type: "delete-comment", commentId, gameId });
   };
 
+  const renderDeleteButton = (comment) => {
+    if (
+      user &&
+      (user.data.nickname === comment.nickname || user.data.isAdmin)
+    ) {
+      return (
+        <button
+          onClick={() => handleCommentDeletion(comment._id)}
+          className="comments__button_delete"
+        />
+      );
+    }
+  };
+
   const renderComments = () =>
     comments.map((comment) => {
       return (
         <div key={comment._id} className="comments__div">
-          {user ? (
-            user.data.nickname === comment.nickname ? (
-              <button
-                onClick={() => handleCommentDeletion(comment._id)}
-                className="comments__button_delete"
-              />
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+          {renderDeleteButton(comment)}
           <h5 className="comments__username">{comment.nickname}</h5>
           <p className="comments__text">{comment.text}</p>
         </div>
