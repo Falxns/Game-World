@@ -1,6 +1,6 @@
 import "./header.css";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import homeIcon from "../../assets/icons/home.svg";
 import plusIcon from "../../assets/icons/plus.svg";
 import { userContext } from "../../context/user.context";
@@ -59,6 +59,7 @@ const Header = () => {
       <div className="header__div">{pages}</div>
       <h3 className="header__title">Game World</h3>
       <div className="header__div">{actions}</div>
+      {user ? "" : <Redirect to="/" />}
     </header>
   );
 };
