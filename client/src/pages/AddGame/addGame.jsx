@@ -80,6 +80,8 @@ class AddGame extends Component {
 
     const { user } = this.context;
 
+    fd.append("userId", user.data._id);
+
     fetch("http://localhost:3000/games", {
       method: "POST",
       body: fd,

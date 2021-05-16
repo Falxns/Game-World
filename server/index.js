@@ -27,6 +27,7 @@ const gameSchema = new mongoose.Schema({
   maturity: Number,
   price: Number,
   desc: String,
+  userId: String,
 });
 const Game = mongoose.model("Game", gameSchema, "games");
 
@@ -114,7 +115,8 @@ app.post("/login", async function (req, res) {
 });
 
 app.post("/games", auth, function (req, res) {
-  const { title, platform, genre, maturity, price, desc, image } = req.body;
+  const { title, platform, genre, maturity, price, desc, image, userId } =
+    req.body;
 
   let imageName = "";
   if (image instanceof fs.ReadStream) {
@@ -137,6 +139,7 @@ app.post("/games", auth, function (req, res) {
     price,
     desc,
     imageUrl: "http://localhost:3000/images/games/" + imageName,
+    userId,
   });
 
   game
@@ -179,6 +182,7 @@ app.get("/games/:gameId", function (req, res) {
         maturity: game.maturity,
         price: game.price,
         desc: game.desc,
+        userId: game.userId,
       })
     )
     .catch(() => res.status(404).send());
