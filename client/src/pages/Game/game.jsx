@@ -40,12 +40,10 @@ const Game = () => {
     socket.on("message", (msg) => {
       switch (msg.type) {
         case "comments":
-          console.log(msg.comments);
           setComments(msg.comments);
           break;
 
         case "rating":
-          console.log(msg.value);
           setRating(msg.value);
           break;
         default:

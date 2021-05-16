@@ -274,7 +274,7 @@ io.on("connection", (socket) => {
                       sum += ratings[i].value;
                     }
                     const result = sum / i;
-                    socket.send({ type: "rating", value: result });
+                    socket.send({ type: "rating", value: msg.value });
                   });
                 })
                 .catch((e) => console.log(e));
@@ -291,7 +291,7 @@ io.on("connection", (socket) => {
                       sum += ratings[i].value;
                     }
                     const result = sum / i;
-                    socket.send({ type: "rating", value: result });
+                    socket.send({ type: "rating", value: msg.value });
                   });
                 })
                 .catch((e) => console.log(e));
