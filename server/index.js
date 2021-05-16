@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
   nickname: String,
   email: String,
   password: String,
+  isAdmin: Boolean,
 });
 const User = mongoose.model("User", userSchema, "users");
 
@@ -73,7 +74,7 @@ function generateToken(user) {
 }
 
 app.post("/registration", async function (req, res) {
-  const { nickname, email, password } = req.body;
+  const { nickname, email, password, isAdmin } = req.body;
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -82,6 +83,7 @@ app.post("/registration", async function (req, res) {
     nickname,
     email,
     password: passwordHash,
+    isAdmin,
   });
 
   user.save().catch(() => res.status(500).send());

@@ -8,6 +8,8 @@ class Registration extends Component {
     nickname: "",
     email: "",
     password: "",
+    adminChecked: false,
+    adminPassword: "",
     isRedirected: false,
   };
 
@@ -23,6 +25,23 @@ class Registration extends Component {
     this.setState({ password: e.target.value });
   };
 
+  handleIsAdminChange = (e) => {
+    const inputAdminPassword = document.querySelector("#adminPassword");
+    const labelAdminPassword = document.querySelector("#labelForAdminPassword");
+    if (e.target.checked) {
+      inputAdminPassword.classList.remove("container__input_hidden");
+      labelAdminPassword.classList.remove("container__label_hidden");
+    } else {
+      inputAdminPassword.classList.add("container__input_hidden");
+      labelAdminPassword.classList.add("container__label_hidden");
+    }
+    this.setState({ adminChecked: e.target.checked });
+  };
+
+  handleAdminPasswordChange = (e) => {
+    this.setState({ adminPassword: e.target.value });
+  };
+
   handleButtonClick = () => {
     const { setUser } = this.context;
 
@@ -30,6 +49,17 @@ class Registration extends Component {
     fd.append("nickname", this.state.nickname);
     fd.append("email", this.state.email);
     fd.append("password", this.state.password);
+
+    if (this.state.adminChecked) {
+      if (this.state.adminPassword === "verystrongpassword") {
+        fd.append("isAdmin", true);
+      } else {
+        alert("Wrong admin password!");
+        return;
+      }
+    } else {
+      fd.append("isAdmin", false);
+    }
 
     fetch("http://localhost:3000/registration", {
       method: "POST",
@@ -89,6 +119,29 @@ class Registration extends Component {
             id="password"
             value={this.state.password}
             onChange={this.handlePasswordChange}
+          />
+          <label className="container__label" htmlFor="isAdmin">
+            Admin?
+          </label>
+          <input
+            className="container__checkbox"
+            type="checkbox"
+            id="isAdmin"
+            onChange={this.handleIsAdminChange}
+          />
+          <label
+            className="container__label container__label_hidden"
+            id="labelForAdminPassword"
+            htmlFor="adminPassword"
+          >
+            Admin password
+          </label>
+          <input
+            className="container__input container__input_hidden"
+            type="password"
+            id="adminPassword"
+            value={this.state.adminPassword}
+            onChange={this.handleAdminPasswordChange}
           />
           <button
             className="container__button"

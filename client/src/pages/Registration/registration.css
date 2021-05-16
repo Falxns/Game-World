@@ -16,3 +16,17 @@
   flex-direction: column;
   align-items: center;
 }
+
+.container__checkbox {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.container__label_hidden {
+  display: none;
+}
+
+.container__input_hidden {
+  display: none;
+}
