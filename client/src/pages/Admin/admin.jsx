@@ -69,9 +69,13 @@ class Admin extends Component {
           <td className="table__td">{user.nickname}</td>
           <td className="table__td">{user.email}</td>
           <td className="table__td">{user.isAdmin ? "Yes" : "No"}</td>
-          <td>
-            <button className="table__button"></button>
-          </td>
+          {user.isAdmin ? (
+            <td></td>
+          ) : (
+            <td>
+              <button className="table__button"></button>
+            </td>
+          )}
         </tr>
       );
     });
