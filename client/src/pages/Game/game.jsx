@@ -63,20 +63,6 @@ const Game = () => {
     return <h1 className="game__warning">Loading...</h1>;
   }
 
-  const renderPrice = () => {
-    if (gameData.price)
-      return (
-        <input
-          className="picture__button"
-          type="button"
-          value="Buy now"
-        ></input>
-      );
-    return (
-      <input className="picture__button" type="button" value="Play now"></input>
-    );
-  };
-
   const handleCommentDeletion = (commentId) => {
     socket.send({ type: "delete-comment", commentId, gameId });
   };
@@ -142,7 +128,6 @@ const Game = () => {
         <div className="game__picture">
           <img className="picture__img" src={gameData.imageUrl} alt="game" />
           <h1 className="picture__header">{gameData.title}</h1>
-          {renderPrice()}
         </div>
         <ul className="game__ul">
           <li>
