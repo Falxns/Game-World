@@ -41,6 +41,7 @@ const User = mongoose.model("User", userSchema, "users");
 
 const commentSchema = new mongoose.Schema({
   gameId: String,
+  userId: String,
   nickname: String,
   text: String,
 });
@@ -242,6 +243,7 @@ io.on("connection", (socket) => {
       case "add-comment":
         const comment = new Comment({
           gameId: msg.gameId,
+          userId: msg.userId,
           nickname: msg.nickname,
           text: msg.text,
         });
@@ -368,9 +370,59 @@ const resolvers = {
   },
   Mutation: {
     deleteGame: async (root, { gameId }) =>
-      await Game.findByIdAndDelete(gameId),
+      await Game.findByIdAndDelete(gameId).then((game) => {
+        Rating.find()
+          .then((ratings) =>
+            ratings.map((rate) => {
+              if (rate.gameId === gameId) {
+                Rating.findByIdAndDelete(rate._id).catch((error) =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch((error) => console.log(error));
+
+        Comment.find()
+          .then((comments) =>
+            comments.map((comment) => {
+              if (comment.gameId === gameId) {
+                Comment.findByIdAndDelete(comment._id).catch((error) =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch((error) => console.log(error));
+        return game;
+      }),
     deleteUser: async (root, { userId }) =>
-      await User.findByIdAndDelete(userId),
+      await User.findByIdAndDelete(userId).then((user) => {
+        Rating.find()
+          .then((ratings) =>
+            ratings.map((rate) => {
+              if (rate.userId === userId) {
+                Rating.findByIdAndDelete(rate._id).catch((error) =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch((error) => console.log(error));
+
+        Comment.find()
+          .then((comments) =>
+            comments.map((comment) => {
+              if (comment.userId === userId) {
+                Comment.findByIdAndDelete(comment._id).catch(() =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch(() => console.log(error));
+        return user;
+      }),
   },
 };
 

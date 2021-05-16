@@ -98,6 +98,7 @@ const Game = () => {
     socket.send({
       type: "add-comment",
       gameId,
+      userId: user.data._id,
       nickname: user.data.nickname,
       text,
     });
