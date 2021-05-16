@@ -23,6 +23,10 @@
   margin-bottom: 10px;
 }
 
+.container__checkbox:hover {
+  cursor: pointer;
+}
+
 .container__label_hidden {
   display: none;
 }

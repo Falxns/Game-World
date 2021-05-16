@@ -101,10 +101,16 @@ app.post("/login", async function (req, res) {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user) res.status(400).send();
+  if (!user) {
+    res.status(400).send();
+    return;
+  }
 
   const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) res.status(400).send();
+  if (!validPassword) {
+    res.status(400).send();
+    return;
+  }
 
   const token = generateToken(user);
 
