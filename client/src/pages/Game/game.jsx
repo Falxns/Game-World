@@ -16,6 +16,10 @@ const Game = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(userContext);
 
+  if (gameData) {
+    document.title = gameData.title;
+  }
+
   useEffect(() => {
     fetch("http://localhost:3000/games/" + gameId)
       .then((res) => {

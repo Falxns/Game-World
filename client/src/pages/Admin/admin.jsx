@@ -178,6 +178,8 @@ class Admin extends Component {
   };
 
   render() {
+    document.title = "Admin";
+
     return (
       <>
         <div className="admin__container">
