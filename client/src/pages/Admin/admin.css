@@ -12,6 +12,12 @@
   height: 60px;
   background-color: #7c40ff;
   color: #fff;
+  transition: all 300ms ease;
+}
+
+.admin__button:hover {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
 .admin__table {
@@ -63,8 +69,10 @@
   background-color: transparent;
   background-size: contain;
   background-image: url("../../assets/icons/delete.svg");
+  transition: all 300ms ease;
 }
 
 .table__button:hover {
+  cursor: pointer;
   background-image: url("../../assets/icons/delete-active.svg");
 }

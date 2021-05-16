@@ -69,6 +69,7 @@
 }
 
 .card__button_delete:hover {
+  cursor: pointer;
   background-image: url("../../assets/icons/delete-active.svg");
 }
 
