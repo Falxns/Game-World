@@ -36,6 +36,7 @@ class Admin extends Component {
         query: gql`
           query {
             users {
+              id
               nickname
               email
               isAdmin
@@ -79,7 +80,11 @@ class Admin extends Component {
             <td></td>
           ) : (
             <td>
-              <button className="table__button"></button>
+              <button
+                className="table__button"
+                value={user.id}
+                onClick={this.handleUserDelete}
+              ></button>
             </td>
           )}
         </tr>
@@ -145,6 +150,28 @@ class Admin extends Component {
         this.setState({
           games: this.state.games.filter(
             (game) => game.id !== event.target.value
+          ),
+        })
+      );
+  };
+
+  handleUserDelete = (event) => {
+    const deleteUser = gql`
+      mutation deleteUser($userId: ID!) {
+        deleteUser(userId: $userId) {
+          id
+        }
+      }
+    `;
+    this.state.client
+      .mutate({
+        mutation: deleteUser,
+        variables: { userId: event.target.value },
+      })
+      .then(() =>
+        this.setState({
+          users: this.state.users.filter(
+            (user) => user.id !== event.target.value
           ),
         })
       );
