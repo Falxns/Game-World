@@ -21,6 +21,10 @@
   display: block;
 }
 
+.filters__button:first-of-type {
+  margin-bottom: 10px;
+}
+
 .li__select {
   font-size: 20px;
   padding: 5px 5px;
