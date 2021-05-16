@@ -41,6 +41,10 @@
   margin-right: 10px;
 }
 
+.header__a_icon:first-of-type {
+  margin-right: 10px;
+}
+
 .header__nickname {
   font-size: 24px;
   color: #fff;
