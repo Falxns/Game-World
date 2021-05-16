@@ -61,13 +61,24 @@ class Admin extends Component {
         </tr>
       );
     });
-  render() {
-    return (
-      <>
-        <div className="admin__container">
-          <button className="admin__button">Games</button>
-          <button className="admin__button">Users</button>
-        </div>
+
+  renderUsers = () =>
+    this.state.users.map((user) => {
+      return (
+        <tr>
+          <td className="table__td">{user.nickname}</td>
+          <td className="table__td">{user.email}</td>
+          <td className="table__td">{user.isAdmin ? "Yes" : "No"}</td>
+          <td>
+            <button className="table__button"></button>
+          </td>
+        </tr>
+      );
+    });
+
+  renderTable = () => {
+    if (this.state.choice === "games") {
+      return (
         <table className="admin__table">
           <thead className="table__head">
             <tr>
@@ -81,6 +92,44 @@ class Admin extends Component {
           </thead>
           <tbody className="table__body">{this.renderGames()}</tbody>
         </table>
+      );
+    } else {
+      return (
+        <table className="admin__table">
+          <thead className="table__head">
+            <tr>
+              <th className="table__th">Username</th>
+              <th className="table__th">Email</th>
+              <th className="table__th table__th_admin">Is admin?</th>
+              <th className="table__th table__th_delete">Delete</th>
+            </tr>
+          </thead>
+          <tbody className="table__body">{this.renderUsers()}</tbody>
+        </table>
+      );
+    }
+  };
+
+  handleGamesClick = () => {
+    this.setState({ choice: "games" });
+  };
+
+  handleUsersClick = () => {
+    this.setState({ choice: "users" });
+  };
+
+  render() {
+    return (
+      <>
+        <div className="admin__container">
+          <button className="admin__button" onClick={this.handleGamesClick}>
+            Games
+          </button>
+          <button className="admin__button" onClick={this.handleUsersClick}>
+            Users
+          </button>
+        </div>
+        {this.renderTable()}
       </>
     );
   }

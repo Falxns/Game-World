@@ -41,6 +41,10 @@
   width: 5%;
 }
 
+.table__th_admin {
+  width: 10%;
+}
+
 .table__body {
   font-size: 20px;
 }
