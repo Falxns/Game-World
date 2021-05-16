@@ -18,29 +18,49 @@ class Admin extends Component {
       .query({
         query: gql`
           query {
-            hello
+            games {
+              title
+              platform
+              genre
+              maturity
+              price
+            }
           }
         `,
       })
-      .then((res) => console.log(res));
+      .then((res) => this.setState({ games: res.data.games }));
+    client
+      .query({
+        query: gql`
+          query {
+            users {
+              nickname
+              email
+              isAdmin
+            }
+          }
+        `,
+      })
+      .then((res) => this.setState({ users: res.data.users }));
   };
 
-  renderGames = () => {
-    return (
-      <tr>
-        <td className="table__td">dfgdf</td>
-        <td className="table__td">PC</td>
-        <td className="table__td">dfghghgf</td>
-        <td className="table__td">16</td>
-        <td className="table__td">0</td>
-        <td className="table__td">fghkjfghkfjfgkhfgjhkjhflk</td>
-        <td>
-          <button className="table__button"></button>
-        </td>
-      </tr>
-    );
-  };
-
+  renderGames = () =>
+    this.state.games.map((game) => {
+      return (
+        <tr>
+          <td className="table__td">{game.title}</td>
+          <td className="table__td">{game.platform}</td>
+          <td className="table__td">{game.genre}</td>
+          <td className="table__td">{game.maturity}+</td>
+          <td className="table__td">
+            {game.price ? game.price + "$" : "Free"}
+          </td>
+          <td>
+            <button className="table__button"></button>
+          </td>
+        </tr>
+      );
+    });
   render() {
     return (
       <>
@@ -56,7 +76,6 @@ class Admin extends Component {
               <th className="table__th">Genre</th>
               <th className="table__th table__th_maturity">Maturity</th>
               <th className="table__th table__th_price">Price</th>
-              <th className="table__th">Description</th>
               <th className="table__th table__th_delete">Delete</th>
             </tr>
           </thead>

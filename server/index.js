@@ -303,13 +303,33 @@ io.on("connection", (socket) => {
 
 const typeDefs = gql`
   type Query {
-    hello: String!
+    games: [Game!]!
+    users: [User!]!
+  }
+
+  type Game {
+    id: ID!
+    title: String!
+    platform: String!
+    genre: String!
+    maturity: Int!
+    price: Int!
+    desc: String
+  }
+
+  type User {
+    id: ID!
+    nickname: String!
+    email: String!
+    password: String!
+    isAdmin: Boolean!
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => "hello world",
+    games: () => Game.find(),
+    users: () => User.find(),
   },
 };
 
