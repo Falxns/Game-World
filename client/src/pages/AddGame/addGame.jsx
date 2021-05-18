@@ -109,47 +109,46 @@ class AddGame extends Component {
 
     return (
       <>
-        <h1 className="head-line">ADD GAME</h1>
-        <div className="add-area">
-          <div className="cols-wrapper-add">
-            <div className="image-upload">
+        <h1 className="add-game__head-line">Add game</h1>
+        <div className="add-game__div">
+          <div className="add-game__cols-wrapper">
+            <div className="add-game__image-upload">
               <label htmlFor="image">
                 <img
+                  className="image-upload__img"
                   src={defaultImage}
-                  alt=""
-                  id="image-add"
+                  alt="default"
+                  id="add-game__image"
                   ref={this.imgRef}
                 />
               </label>
               <input
                 onInput={this.handleFileInput}
+                className="image-upload__input"
                 type="file"
-                name="image"
                 id="image"
               />
             </div>
-            <div className="col-title">
-              <ul className="add-ul">
-                <li className="filters-list-item">
-                  <label className="filter-label" htmlFor="title">
+            <div className="add-game__col-form">
+              <ul className="add-game__ul">
+                <li className="add-game__li">
+                  <label className="add-game__label" htmlFor="title">
                     Title
                   </label>
                   <input
-                    className="filter-select"
+                    className="add-game__select"
                     type="text"
-                    name="title"
                     id="title"
                     value={this.state.title}
                     onChange={this.handleTitleChange}
                   />
                 </li>
-                <li className="filters-list-item">
-                  <label className="filter-label" htmlFor="platform">
+                <li className="add-game__li">
+                  <label className="add-game__label" htmlFor="platform">
                     Platform
                   </label>
                   <select
-                    className="filter-select"
-                    name="platform"
+                    className="add-game__select"
                     id="platform"
                     value={this.state.platform}
                     onChange={this.handlePlatformChange}
@@ -160,13 +159,12 @@ class AddGame extends Component {
                     <option value="Nintendo Switch">Nintendo Switch</option>
                   </select>
                 </li>
-                <li className="filters-list-item">
-                  <label className="filter-label" htmlFor="genre">
+                <li className="add-game__li">
+                  <label className="add-game__label" htmlFor="genre">
                     Genre
                   </label>
                   <select
-                    className="filter-select"
-                    name="genre"
+                    className="add-game__select"
                     id="genre"
                     value={this.state.genre}
                     onChange={this.handleGenreChange}
@@ -180,13 +178,12 @@ class AddGame extends Component {
                     <option value="Visual Novel">Visual Novel</option>
                   </select>
                 </li>
-                <li className="filters-list-item">
-                  <label className="filter-label" htmlFor="maturity">
+                <li className="add-game__li">
+                  <label className="add-game__label" htmlFor="maturity">
                     Maturity rating
                   </label>
                   <select
-                    className="filter-select"
-                    name="maturity"
+                    className="add-game__select"
                     id="maturity"
                     value={this.state.maturity}
                     onChange={this.handleMaturityChange}
@@ -197,14 +194,13 @@ class AddGame extends Component {
                     <option value="18">18+</option>
                   </select>
                 </li>
-                <li className="filters-list-item">
-                  <label className="filter-label" htmlFor="price">
+                <li className="add-game__li">
+                  <label className="add-game__label" htmlFor="price">
                     Price
                   </label>
                   <input
-                    className="filter-select"
+                    className="add-game__select"
                     type="number"
-                    name="price"
                     id="price"
                     value={this.state.price}
                     onChange={this.handlePriceChange}
@@ -213,14 +209,13 @@ class AddGame extends Component {
               </ul>
             </div>
           </div>
-          <div className="add-bottom">
-            <div className="filters-list-item">
-              <label className="filter-label" htmlFor="desc">
+          <div className="add-game__bottom">
+            <div className="add-game__li">
+              <label className="add-game__label" htmlFor="desc">
                 Description
               </label>
               <textarea
-                className="filter-select"
-                name="desc"
+                className="add-game__select"
                 id="desc"
                 cols="30"
                 rows="10"
@@ -230,7 +225,7 @@ class AddGame extends Component {
             </div>
             <button
               onClick={this.handleButtonClick}
-              className="add-button"
+              className="add-game__button"
               id="add"
             >
               ADD

@@ -45,10 +45,11 @@ class Login extends Component {
   };
 
   render() {
+    document.title = "Login";
     return (
       <>
-        <h1 className="head-line">Login</h1>
-        <div className="login-container">
+        <h1 className="login__header">Login</h1>
+        <div className="login__container">
           <label className="container__label" htmlFor="email">
             Email:
           </label>

@@ -44,15 +44,14 @@ class Filters extends Component {
 
   render() {
     return (
-      <div className="filters-list">
-        <ul className="filters-ul">
-          <li className="filters-list-item">
-            <label className="filter-label" htmlFor="platform">
+      <div className="filters">
+        <ul className="filters__ul">
+          <li className="filters__li">
+            <label className="li__label" htmlFor="platform">
               Platform
             </label>
             <select
-              className="filter-select"
-              name="platform"
+              className="li__select"
               id="platform"
               value={this.state.platform}
               onChange={this.handlePlatformChange}
@@ -63,13 +62,12 @@ class Filters extends Component {
               <option value="Nintendo Switch">Nintendo Switch</option>
             </select>
           </li>
-          <li className="filters-list-item">
-            <label className="filter-label" htmlFor="genre">
+          <li className="filters__li">
+            <label className="li__label" htmlFor="genre">
               Genre
             </label>
             <select
-              className="filter-select"
-              name="genre"
+              className="li__select"
               id="genre"
               value={this.state.genre}
               onChange={this.handleGenreChange}
@@ -83,13 +81,12 @@ class Filters extends Component {
               <option value="Visual Novel">Visual Novel</option>
             </select>
           </li>
-          <li className="filters-list-item">
-            <label className="filter-label" htmlFor="maturity">
+          <li className="filters__li">
+            <label className="li__label" htmlFor="maturity">
               Maturity rating
             </label>
             <select
-              className="filter-select"
-              name="maturity"
+              className="li__select"
               id="maturity"
               value={this.state.maturity}
               onChange={this.handleMaturityChange}
@@ -101,10 +98,10 @@ class Filters extends Component {
             </select>
           </li>
         </ul>
-        <button onClick={this.handleGameFilter} className="filter-button">
+        <button onClick={this.handleGameFilter} className="filters__button">
           Apply
         </button>
-        <button onClick={this.props.loadAllGames} className="filter-button">
+        <button onClick={this.props.loadAllGames} className="filters__button">
           Reset
         </button>
       </div>

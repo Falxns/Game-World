@@ -9,8 +9,8 @@ class GameCard extends Component {
 
   renderPrice() {
     if (this.props.gameData.price === 0)
-      return <img src={freePrice} alt="Free" className="game-price-free" />;
-    else return <p className="game-price">${this.props.gameData.price}</p>;
+      return <img src={freePrice} alt="free" className="card__price_free" />;
+    return <p className="card__price">${this.props.gameData.price}</p>;
   }
 
   handleGameDeletion = () => {
@@ -39,13 +39,16 @@ class GameCard extends Component {
     const { user } = this.context;
 
     return (
-      <div className="game-card">
+      <div className="games-list__card">
         {user && (
-          <button onClick={this.handleGameDeletion} className="delete-button" />
+          <button
+            onClick={this.handleGameDeletion}
+            className="card__button_delete"
+          />
         )}
         <Link to={"/games/" + gameData._id}>
-          <img src={gameData.imageUrl} alt="game" className="game-cover" />
-          <p className="game-title">{gameData.title}</p>
+          <img src={gameData.imageUrl} alt="game" className="card__img" />
+          <p className="card__title">{gameData.title}</p>
           {this.renderPrice()}
         </Link>
       </div>

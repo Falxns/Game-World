@@ -1,4 +1,4 @@
-.head-line {
+.home__head-line {
   font-size: 60px;
   width: 100%;
   height: 90px;
@@ -9,13 +9,13 @@
   font-family: "Marker", cursive;
 }
 
-.cols-wrapper {
+.home__cols-wrapper {
   display: flex;
   margin-bottom: 10px;
 }
 
 @media (max-width: 950px) {
-  .cols-wrapper {
+  .home__cols-wrapper {
     flex-direction: column;
     width: 100%;
   }
@@ -35,7 +35,7 @@
 }
 
 @media (max-width: 400px) {
-  .head-line {
+  .home__head-line {
     font-size: 50px;
     height: 70px;
   }

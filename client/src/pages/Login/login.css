@@ -1,8 +1,20 @@
-.login-container {
+.login__header {
+  font-size: 60px;
+  width: 100%;
+  height: 90px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  -webkit-text-stroke: #7c40ff 1.3px;
+  font-family: "Marker", cursive;
+}
+
+.login__container {
   margin: 0 auto;
   width: 600px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .container__label {
@@ -26,7 +38,8 @@
 .container__button {
   font-size: 30px;
   font-weight: bold;
-  height: 100px;
+  width: 200px;
+  height: 60px;
   background-color: #7c40ff;
   color: #fff;
 }

@@ -1,13 +1,20 @@
 import "./game.css";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import arrowIcon from "../../assets/icons/double-arrow.svg";
+import { io } from "socket.io-client";
+import { userContext } from "../../context/user.context";
 
 const Game = () => {
   const { gameId } = useParams();
 
+  const [socket, setSocket] = useState(null);
+  const [text, setText] = useState("");
+  const [comments, setComments] = useState([]);
+  const [rating, setRating] = useState(0);
   const [gameData, setGameData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(userContext);
 
   useEffect(() => {
     fetch("http://localhost:3000/games/" + gameId)
@@ -20,46 +27,165 @@ const Game = () => {
       .catch((err) => console.log(err));
   }, [gameId]);
 
+  useEffect(() => {
+    const socket = io("ws://localhost:3000");
+    socket.on("connect_error", (m) => {
+      console.log("error", m);
+    });
+    socket.on("connect", () => {
+      console.log("socket.io connection open");
+      socket.send({ type: "comments", gameId });
+      socket.send({ type: "rating", gameId });
+    });
+    socket.on("message", (msg) => {
+      switch (msg.type) {
+        case "comments":
+          console.log(msg.comments);
+          setComments(msg.comments);
+          break;
+
+        case "rating":
+          console.log(msg.value);
+          setRating(msg.value);
+          break;
+        default:
+          break;
+      }
+    });
+    setSocket(socket);
+    return () => {
+      socket.disconnect();
+      console.log("socket.io disconnected");
+    };
+  }, [gameId]);
+
   if (loading) {
-    return <h1 className="games-text">Loading...</h1>;
+    return <h1 className="game__warning">Loading...</h1>;
   }
 
   const renderPrice = () => {
     if (gameData.price)
       return (
-        <input className="button-play" type="button" value="Buy now"></input>
+        <input
+          className="picture__button"
+          type="button"
+          value="Buy now"
+        ></input>
       );
-    else
+    return (
+      <input className="picture__button" type="button" value="Play now"></input>
+    );
+  };
+
+  const handleCommentDeletion = (commentId) => {
+    socket.send({ type: "delete-comment", commentId, gameId });
+  };
+
+  const renderComments = () =>
+    comments.map((comment) => {
       return (
-        <input className="button-play" type="button" value="Play now"></input>
+        <div key={comment._id} className="comments__div">
+          {user ? (
+            user.data.nickname === comment.nickname ? (
+              <button
+                onClick={() => handleCommentDeletion(comment._id)}
+                className="comments__button_delete"
+              />
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
+          <h5 className="comments__username">{comment.nickname}</h5>
+          <p className="comments__text">{comment.text}</p>
+        </div>
       );
+    });
+
+  const sendComment = () => {
+    socket.send({
+      type: "add-comment",
+      gameId,
+      nickname: user.data.nickname,
+      text,
+    });
+    setText("");
+  };
+
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+  };
+
+  const renderRating = () =>
+    [0, 1, 2, 3, 4].map((value) => {
+      return (
+        <button
+          key={value}
+          onClick={() => (user ? sendRating(value + 1) : null)}
+          className={
+            rating > value + 0.5
+              ? "rating__star rating__star_set"
+              : "rating__star"
+          }
+        ></button>
+      );
+    });
+
+  const sendRating = (value) => {
+    socket.send({ type: "add-rating", gameId, userId: user.data._id, value });
   };
 
   return (
     <>
-      <div className="game-area">
-        <div className="picture-area">
-          <img className="image" src={gameData.imageUrl} alt="" />
-          <h1 className="head-line-game">{gameData.title}</h1>
+      <div className="game__content">
+        <div className="game__picture">
+          <img className="picture__img" src={gameData.imageUrl} alt="game" />
+          <h1 className="picture__header">{gameData.title}</h1>
           {renderPrice()}
         </div>
-        <ul className="info-list">
+        <ul className="game__ul">
           <li>
-            <p className="info-label">Platform: {gameData.platform}</p>
+            <p className="game__p">Platform: {gameData.platform}</p>
           </li>
           <li>
-            <p className="info-label">Genre: {gameData.genre}</p>
+            <p className="game__p">Genre: {gameData.genre}</p>
           </li>
           <li>
-            <p className="info-label"> Maturity rating: {gameData.maturity}+</p>
+            <p className="game__p"> Maturity rating: {gameData.maturity}+</p>
           </li>
         </ul>
       </div>
-      <div className="desc-area">
-        <p className="p-about">ABOUT</p>
-        <p className="p-title">{gameData.title}</p>
-        <img className="desc-arrow" src={arrowIcon} alt="" />
-        <p className="p-desc">{gameData.desc}</p>
+      <div className="game__description">
+        <p className="description__p_about">About</p>
+        <p className="description__p_title">{gameData.title}</p>
+        <img className="description__arrow" src={arrowIcon} alt="" />
+        <p className="description__p_desc">{gameData.desc}</p>
+      </div>
+      <div className="game__rating">
+        <h3 className="rating__header">Rating</h3>
+        <div className="rating__list">{renderRating()}</div>
+      </div>
+      <div className="game__comments">
+        <h3 className="comments__header">Comments</h3>
+        {renderComments()}
+        {user ? (
+          <div className="game__new-comment">
+            <textarea
+              className="new-comment__textarea"
+              cols="30"
+              rows="10"
+              placeholder="Write your comment here..."
+              value={text}
+              onChange={handleTextChange}
+            ></textarea>
+            <button onClick={sendComment} className="new-comment__button">
+              Post
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );

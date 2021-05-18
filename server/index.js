@@ -7,6 +7,8 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const auth = require("./middlewares/auth");
 const jwt = require("jsonwebtoken");
+const http = require("http");
+const { Server } = require("socket.io");
 
 mongoose
   .connect("mongodb://localhost/test", {
@@ -34,6 +36,20 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema, "users");
 
+const commentSchema = new mongoose.Schema({
+  gameId: String,
+  nickname: String,
+  text: String,
+});
+const Comment = mongoose.model("Comment", commentSchema, "comments");
+
+const ratingSchema = new mongoose.Schema({
+  gameId: String,
+  userId: String,
+  value: Number,
+});
+const Rating = mongoose.model("Rating", ratingSchema, "ratings");
+
 const app = express();
 app.use(express.static("public"));
 app.use(cors());
@@ -42,6 +58,14 @@ app.use(formData.parse());
 app.use(formData.format());
 app.use(formData.stream());
 app.use(formData.union());
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3001",
+    methods: ["GET", "POST", "DELETE"],
+  },
+});
 
 function generateToken(user) {
   return jwt.sign({ _id: user._id }, "aghkshdjfdgfklyeru42fdg");
@@ -165,4 +189,109 @@ app.delete("/games/:gameId", auth, function (req, res) {
     .catch(() => res.status(404).send());
 });
 
-app.listen(3000, () => console.log("Server is listening on port 3000.."));
+io.on("connection", (socket) => {
+  console.log("user connected");
+  socket.on("disconnect", () => {
+    console.log("disconnect");
+  });
+  socket.on("message", (msg) => {
+    switch (msg.type) {
+      case "comments":
+        Comment.find({ gameId: msg.gameId }).then((comments) =>
+          socket.send({ type: "comments", comments })
+        );
+
+        break;
+      case "add-comment":
+        const comment = new Comment({
+          gameId: msg.gameId,
+          nickname: msg.nickname,
+          text: msg.text,
+        });
+        comment
+          .save()
+          .then(() => {
+            Comment.find({ gameId: msg.gameId }).then((comments) =>
+              socket.send({ type: "comments", comments })
+            );
+          })
+          .catch((e) => console.log(e));
+
+        break;
+
+      case "delete-comment":
+        Comment.findByIdAndDelete(msg.commentId)
+          .then(() =>
+            Comment.find({ gameId: msg.gameId })
+              .then((comments) => socket.send({ type: "comments", comments }))
+              .catch((e) => console.log(e))
+          )
+          .catch((e) => console.log(e));
+
+        break;
+
+      case "rating":
+        Rating.find({ gameId: msg.gameId }).then((ratings) => {
+          let sum = 0,
+            i = 0;
+          for (i; i < ratings.length; i++) {
+            sum += ratings[i].value;
+          }
+          const result = sum / i;
+          socket.send({ type: "rating", value: result });
+        });
+        break;
+
+      case "add-rating":
+        Rating.findOne({ gameId: msg.gameId, userId: msg.userId })
+          .then((ratingFound) => {
+            if (!ratingFound) {
+              const rating = new Rating({
+                gameId: msg.gameId,
+                userId: msg.userId,
+                value: msg.value,
+              });
+              rating
+                .save()
+                .then(() => {
+                  Rating.find({ gameId: msg.gameId }).then((ratings) => {
+                    let sum = 0,
+                      i = 0;
+                    for (i; i < ratings.length; i++) {
+                      sum += ratings[i].value;
+                    }
+                    const result = sum / i;
+                    socket.send({ type: "rating", value: result });
+                  });
+                })
+                .catch((e) => console.log(e));
+            } else {
+              Rating.findOneAndUpdate(
+                { gameId: msg.gameId, userId: msg.userId },
+                { value: msg.value }
+              )
+                .then(() => {
+                  Rating.find({ gameId: msg.gameId }).then((ratings) => {
+                    let sum = 0,
+                      i = 0;
+                    for (i; i < ratings.length; i++) {
+                      sum += ratings[i].value;
+                    }
+                    const result = sum / i;
+                    socket.send({ type: "rating", value: result });
+                  });
+                })
+                .catch((e) => console.log(e));
+            }
+          })
+          .catch((e) => console.log(e));
+
+        break;
+
+      default:
+        break;
+    }
+  });
+});
+
+server.listen(3000, () => console.log("Server is listening on port 3000.."));

@@ -28,8 +28,8 @@ class Home extends Component {
     document.title = "Game World";
     return (
       <>
-        <h1 className="head-line">CATALOG</h1>
-        <div className="cols-wrapper">
+        <h1 className="home__head-line">CATALOG</h1>
+        <div className="home__cols-wrapper">
           <Filters
             updateGamesList={this.updateGamesList}
             loadAllGames={this.loadAllGames}
