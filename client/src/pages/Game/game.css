@@ -170,6 +170,7 @@
 }
 
 .new-comment__button:hover {
+  cursor: pointer;
   transform: scale(1.1);
 }
 

@@ -35,7 +35,7 @@ class Login extends Component {
             localStorage.setItem("user", JSON.stringify(user));
             this.setState({ isRedirected: true });
           })
-          .catch((err) => console.log(err));
+          .catch(() => alert("Wrong email or password!"));
       })
       .catch((err) => console.log(err));
   };
