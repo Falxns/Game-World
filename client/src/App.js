@@ -9,6 +9,7 @@ import Game from "./pages/Game/game";
 import Login from "./pages/Login/login";
 import Registration from "./pages/Registration/registration";
 import { userContext } from "./context/user.context";
+import Admin from "./pages/Admin/admin";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -19,6 +20,9 @@ function App() {
         <div className="content">
           <Header />
           <Switch>
+            <Route path="/admin">
+              <Admin />
+            </Route>
             <Route path="/registration">
               <Registration />
             </Route>

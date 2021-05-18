@@ -20,4 +20,9 @@
 
 .footer__a {
   height: 50px;
+  transition: all 300ms ease;
+}
+
+.footer__a:hover {
+  transform: scale(1.1);
 }

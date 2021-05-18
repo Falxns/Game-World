@@ -17,6 +17,21 @@
 
 .header__a {
   height: 50px;
+  transition: all 300ms ease;
+}
+
+.header__a_icon:hover {
+  transform: scale(1.1);
+}
+
+.header__a_button:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.header__button:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .header__img {
@@ -38,6 +53,10 @@
 }
 
 .header__a_button:first-of-type {
+  margin-right: 10px;
+}
+
+.header__a_icon:first-of-type {
   margin-right: 10px;
 }
 

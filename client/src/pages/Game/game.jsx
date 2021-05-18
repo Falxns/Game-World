@@ -16,6 +16,10 @@ const Game = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(userContext);
 
+  if (gameData) {
+    document.title = gameData.title;
+  }
+
   useEffect(() => {
     fetch("http://localhost:3000/games/" + gameId)
       .then((res) => {
@@ -40,12 +44,10 @@ const Game = () => {
     socket.on("message", (msg) => {
       switch (msg.type) {
         case "comments":
-          console.log(msg.comments);
           setComments(msg.comments);
           break;
 
         case "rating":
-          console.log(msg.value);
           setRating(msg.value);
           break;
         default:
@@ -63,40 +65,29 @@ const Game = () => {
     return <h1 className="game__warning">Loading...</h1>;
   }
 
-  const renderPrice = () => {
-    if (gameData.price)
-      return (
-        <input
-          className="picture__button"
-          type="button"
-          value="Buy now"
-        ></input>
-      );
-    return (
-      <input className="picture__button" type="button" value="Play now"></input>
-    );
-  };
-
   const handleCommentDeletion = (commentId) => {
     socket.send({ type: "delete-comment", commentId, gameId });
+  };
+
+  const renderDeleteButton = (comment) => {
+    if (
+      user &&
+      (user.data.nickname === comment.nickname || user.data.isAdmin)
+    ) {
+      return (
+        <button
+          onClick={() => handleCommentDeletion(comment._id)}
+          className="comments__button_delete"
+        />
+      );
+    }
   };
 
   const renderComments = () =>
     comments.map((comment) => {
       return (
         <div key={comment._id} className="comments__div">
-          {user ? (
-            user.data.nickname === comment.nickname ? (
-              <button
-                onClick={() => handleCommentDeletion(comment._id)}
-                className="comments__button_delete"
-              />
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+          {renderDeleteButton(comment)}
           <h5 className="comments__username">{comment.nickname}</h5>
           <p className="comments__text">{comment.text}</p>
         </div>
@@ -107,6 +98,7 @@ const Game = () => {
     socket.send({
       type: "add-comment",
       gameId,
+      userId: user.data._id,
       nickname: user.data.nickname,
       text,
     });
@@ -142,7 +134,6 @@ const Game = () => {
         <div className="game__picture">
           <img className="picture__img" src={gameData.imageUrl} alt="game" />
           <h1 className="picture__header">{gameData.title}</h1>
-          {renderPrice()}
         </div>
         <ul className="game__ul">
           <li>

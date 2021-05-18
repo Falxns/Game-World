@@ -9,6 +9,7 @@ const auth = require("./middlewares/auth");
 const jwt = require("jsonwebtoken");
 const http = require("http");
 const { Server } = require("socket.io");
+const { ApolloServer, gql } = require("apollo-server-express");
 
 mongoose
   .connect("mongodb://localhost/test", {
@@ -26,6 +27,7 @@ const gameSchema = new mongoose.Schema({
   maturity: Number,
   price: Number,
   desc: String,
+  userId: String,
 });
 const Game = mongoose.model("Game", gameSchema, "games");
 
@@ -33,11 +35,13 @@ const userSchema = new mongoose.Schema({
   nickname: String,
   email: String,
   password: String,
+  isAdmin: Boolean,
 });
 const User = mongoose.model("User", userSchema, "users");
 
 const commentSchema = new mongoose.Schema({
   gameId: String,
+  userId: String,
   nickname: String,
   text: String,
 });
@@ -72,7 +76,7 @@ function generateToken(user) {
 }
 
 app.post("/registration", async function (req, res) {
-  const { nickname, email, password } = req.body;
+  const { nickname, email, password, isAdmin } = req.body;
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -81,6 +85,7 @@ app.post("/registration", async function (req, res) {
     nickname,
     email,
     password: passwordHash,
+    isAdmin,
   });
 
   user.save().catch(() => res.status(500).send());
@@ -97,10 +102,16 @@ app.post("/login", async function (req, res) {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user) res.status(400).send();
+  if (!user) {
+    res.status(400).send();
+    return;
+  }
 
   const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) res.status(400).send();
+  if (!validPassword) {
+    res.status(400).send();
+    return;
+  }
 
   const token = generateToken(user);
 
@@ -111,7 +122,8 @@ app.post("/login", async function (req, res) {
 });
 
 app.post("/games", auth, function (req, res) {
-  const { title, platform, genre, maturity, price, desc, image } = req.body;
+  const { title, platform, genre, maturity, price, desc, image, userId } =
+    req.body;
 
   let imageName = "";
   if (image instanceof fs.ReadStream) {
@@ -134,6 +146,7 @@ app.post("/games", auth, function (req, res) {
     price,
     desc,
     imageUrl: "http://localhost:3000/images/games/" + imageName,
+    userId,
   });
 
   game
@@ -176,6 +189,7 @@ app.get("/games/:gameId", function (req, res) {
         maturity: game.maturity,
         price: game.price,
         desc: game.desc,
+        userId: game.userId,
       })
     )
     .catch(() => res.status(404).send());
@@ -186,6 +200,30 @@ app.delete("/games/:gameId", auth, function (req, res) {
 
   Game.findByIdAndDelete(gameId)
     .then((game) => res.send(game))
+    .catch(() => res.status(404).send());
+
+  Rating.find()
+    .then((ratings) =>
+      ratings.map((rate) => {
+        if (rate.gameId === gameId) {
+          Rating.findByIdAndDelete(rate._id).catch(() =>
+            res.status(404).send()
+          );
+        }
+      })
+    )
+    .catch(() => res.status(404).send());
+
+  Comment.find()
+    .then((comments) =>
+      comments.map((comment) => {
+        if (comment.gameId === gameId) {
+          Comment.findByIdAndDelete(comment._id).catch(() =>
+            res.status(404).send()
+          );
+        }
+      })
+    )
     .catch(() => res.status(404).send());
 });
 
@@ -205,6 +243,7 @@ io.on("connection", (socket) => {
       case "add-comment":
         const comment = new Comment({
           gameId: msg.gameId,
+          userId: msg.userId,
           nickname: msg.nickname,
           text: msg.text,
         });
@@ -261,7 +300,7 @@ io.on("connection", (socket) => {
                       sum += ratings[i].value;
                     }
                     const result = sum / i;
-                    socket.send({ type: "rating", value: result });
+                    socket.send({ type: "rating", value: msg.value });
                   });
                 })
                 .catch((e) => console.log(e));
@@ -278,7 +317,7 @@ io.on("connection", (socket) => {
                       sum += ratings[i].value;
                     }
                     const result = sum / i;
-                    socket.send({ type: "rating", value: result });
+                    socket.send({ type: "rating", value: msg.value });
                   });
                 })
                 .catch((e) => console.log(e));
@@ -293,5 +332,102 @@ io.on("connection", (socket) => {
     }
   });
 });
+
+const typeDefs = gql`
+  type Query {
+    games: [Game!]!
+    users: [User!]!
+  }
+
+  type Mutation {
+    deleteGame(gameId: ID!): Game!
+    deleteUser(userId: ID!): User!
+  }
+
+  type Game {
+    id: ID!
+    title: String!
+    platform: String!
+    genre: String!
+    maturity: Int!
+    price: Int!
+    desc: String
+  }
+
+  type User {
+    id: ID!
+    nickname: String!
+    email: String!
+    password: String!
+    isAdmin: Boolean!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    games: () => Game.find(),
+    users: () => User.find(),
+  },
+  Mutation: {
+    deleteGame: async (root, { gameId }) =>
+      await Game.findByIdAndDelete(gameId).then((game) => {
+        Rating.find()
+          .then((ratings) =>
+            ratings.map((rate) => {
+              if (rate.gameId === gameId) {
+                Rating.findByIdAndDelete(rate._id).catch((error) =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch((error) => console.log(error));
+
+        Comment.find()
+          .then((comments) =>
+            comments.map((comment) => {
+              if (comment.gameId === gameId) {
+                Comment.findByIdAndDelete(comment._id).catch((error) =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch((error) => console.log(error));
+        return game;
+      }),
+    deleteUser: async (root, { userId }) =>
+      await User.findByIdAndDelete(userId).then((user) => {
+        Rating.find()
+          .then((ratings) =>
+            ratings.map((rate) => {
+              if (rate.userId === userId) {
+                Rating.findByIdAndDelete(rate._id).catch((error) =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch((error) => console.log(error));
+
+        Comment.find()
+          .then((comments) =>
+            comments.map((comment) => {
+              if (comment.userId === userId) {
+                Comment.findByIdAndDelete(comment._id).catch(() =>
+                  console.log(error)
+                );
+              }
+            })
+          )
+          .catch(() => console.log(error));
+        return user;
+      }),
+  },
+};
+
+const serverGql = new ApolloServer({ typeDefs, resolvers });
+
+serverGql.applyMiddleware({ app });
 
 server.listen(3000, () => console.log("Server is listening on port 3000.."));

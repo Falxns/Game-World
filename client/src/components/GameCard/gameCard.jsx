@@ -34,18 +34,26 @@ class GameCard extends Component {
       .catch((err) => console.log(err));
   };
 
-  render() {
+  renderDeleteButton() {
     const { gameData } = this.props;
     const { user } = this.context;
 
+    if (user && (user.data.isAdmin || user.data._id === gameData.userId)) {
+      return (
+        <button
+          onClick={this.handleGameDeletion}
+          className="card__button_delete"
+        />
+      );
+    }
+  }
+
+  render() {
+    const { gameData } = this.props;
+
     return (
       <div className="games-list__card">
-        {user && (
-          <button
-            onClick={this.handleGameDeletion}
-            className="card__button_delete"
-          />
-        )}
+        {this.renderDeleteButton()}
         <Link to={"/games/" + gameData._id}>
           <img src={gameData.imageUrl} alt="game" className="card__img" />
           <p className="card__title">{gameData.title}</p>
